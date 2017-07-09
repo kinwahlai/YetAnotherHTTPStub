@@ -8,7 +8,7 @@
 
 import Foundation
 
-public class StubSessionManager {
+public class StubSessionManager: NSObject {
     private static var _sharedSession: StubSession?
     public class func sharedSession() -> StubSession {
         if _sharedSession == nil {

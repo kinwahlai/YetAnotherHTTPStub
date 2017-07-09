@@ -10,7 +10,7 @@ import Foundation
 
 public typealias Matcher = (URLRequest) -> (Bool)
 
-public class StubRequest {
+public class StubRequest: NSObject {
     internal let matcher: Matcher
     internal var responses: [StubResponse]
     

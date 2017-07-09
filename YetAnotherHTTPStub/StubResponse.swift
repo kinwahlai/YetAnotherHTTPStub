@@ -55,7 +55,7 @@ public enum Response {
 
 public typealias Builder = (URLRequest) -> (Response)
 
-public class StubResponse {
+public class StubResponse: NSObject {
     internal let builder: Builder
     
     public init(_ builder: @escaping Builder) {

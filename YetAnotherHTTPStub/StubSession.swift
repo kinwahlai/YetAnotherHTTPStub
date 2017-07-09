@@ -12,7 +12,7 @@ import Foundation
 // 1 session -> n matcher
 // 1 macther -> n response builder, operate in sequence
 
-public class StubSession {
+public class StubSession: NSObject {
     internal var isProtocolRegistered = false
     internal var uuid: UUID
     internal var stubRequests: [StubRequest]
