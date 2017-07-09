@@ -12,13 +12,9 @@ public typealias Matcher = (URLRequest) -> (Bool)
 
 public class StubRequest {
     internal let matcher: Matcher
-    private let url: String
-    private let method: String
     internal var responses: [StubResponse]
     
-    public init(_ url: String, _ method: String, _ matcher: @escaping Matcher) {
-        self.url = url
-        self.method = method
+    public init(_ matcher: @escaping Matcher) {
         self.matcher = matcher
         self.responses = []
     }
@@ -36,10 +32,6 @@ public class StubRequest {
         } else {
             return nil
         }
-    }
-    
-    internal func compare(_ url: String, _ method: String) -> Bool {
-        return (self.url == url && self.method == method)
     }
 }
 

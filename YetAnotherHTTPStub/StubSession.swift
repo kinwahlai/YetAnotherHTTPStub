@@ -45,16 +45,15 @@ public class StubSession {
     }
     
     @discardableResult
-    public func whenRequest(url: String, method: String, matcher: @escaping Matcher) -> StubRequest {
-        let stubRequest = StubRequest(url, method, matcher)
+    public func whenRequest(matcher: @escaping Matcher) -> StubRequest {
+        let stubRequest = StubRequest(matcher)
         stubRequests.append(stubRequest)
         return stubRequest
     }
     
     public func find(by urlRequest: URLRequest) -> StubRequest? {
-        guard let url = urlRequest.url?.absoluteString, let method = urlRequest.httpMethod else { return nil }
         return stubRequests.first { (stub) -> Bool in
-            return stub.compare(url, method)
+            return stub.matcher(urlRequest)
         }
     }
 }

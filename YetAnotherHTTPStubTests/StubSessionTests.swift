@@ -38,10 +38,10 @@ class StubSessionTests: XCTestCase {
         let google = URLRequest(url: URL(string: "https://www.google.com/")!)
         let httpbin = URLRequest(url: URL(string: "https://www.httpbin.org/")!)
         
-        session.whenRequest(url: "https://www.google.com/", method: "GET") { (urlrequest: URLRequest) -> Bool in
+        session.whenRequest { (urlrequest: URLRequest) -> Bool in
             return urlrequest == google
         }
-        session.whenRequest(url: "https://httpbin.org/", method: "GET") { (urlrequest: URLRequest) -> Bool in
+        session.whenRequest { (urlrequest: URLRequest) -> Bool in
             return urlrequest == google
         }
         
@@ -78,16 +78,21 @@ class StubSessionTests: XCTestCase {
         let stubRequest = session.find(by: google)
         XCTAssertNil(stubRequest)
     }
+    
     func testStubRequestFound() {
         var google = URLRequest(url: URL(string: "https://www.google.com/")!)
         google.httpMethod = "POST"
         let httpbin = URLRequest(url: URL(string: "https://www.httpbin.org/")!)
         
-        session.whenRequest(url: "https://www.google.com/", method: "GET") { (urlrequest: URLRequest) -> Bool in
-            return urlrequest == google
+        session.whenRequest { (urlrequest: URLRequest) -> Bool in
+            guard let urlstring = urlrequest.url?.absoluteString, let method = urlrequest.httpMethod else { return false }
+            let result = (urlstring == "https://www.google.com/" && method == "GET")
+            return result
         }
-        session.whenRequest(url: "https://www.httpbin.org/", method: "GET") { (urlrequest: URLRequest) -> Bool in
-            return urlrequest == google
+        session.whenRequest { (urlrequest: URLRequest) -> Bool in
+            guard let urlstring = urlrequest.url?.absoluteString, let method = urlrequest.httpMethod else { return false }
+            let result = (urlstring == "https://www.httpbin.org/" && method == "GET")
+            return result
         }
         
         let stubRequest = session.find(by: httpbin)

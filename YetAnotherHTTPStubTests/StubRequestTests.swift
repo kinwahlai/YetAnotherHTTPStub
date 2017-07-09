@@ -28,19 +28,19 @@ class StubRequestTests: XCTestCase {
     }
     
     func testOneMatcherForEachRequest() {
-        let stubRequest = StubRequest("https://httpbin.org/", "GET", trueMatcher)
+        let stubRequest = StubRequest(trueMatcher)
         XCTAssertNotNil(stubRequest)
         XCTAssertNotNil(stubRequest.matcher)
     }
     
     func testRequestHasNoStubResponse() {
-        let stubRequest = StubRequest("https://httpbin.org/", "GET", trueMatcher)
+        let stubRequest = StubRequest(trueMatcher)
         XCTAssertNotNil(stubRequest.responses)
         XCTAssertEqual(stubRequest.responses.count, 0)
     }
 
     func testRequestHasMultipleStubResponse() {
-        let stubRequest = StubRequest("https://httpbin.org/", "GET", trueMatcher)
+        let stubRequest = StubRequest(trueMatcher)
         stubRequest.thenResponse { (urlrequest: URLRequest)  -> Response in
             return .success(status: 200, headers:[:], content: .noContent)
         }.thenResponse { (urlrequest: URLRequest)  -> Response in
@@ -53,14 +53,14 @@ class StubRequestTests: XCTestCase {
     
     func testNoResponsesIfDeveloperDidntSetResponse() {
         let httpbin = URLRequest(url: URL(string: "https://www.httpbin.org/")!)
-        let stubRequest = StubRequest("https://httpbin.org/", "GET", falseMatcher)
+        let stubRequest = StubRequest(falseMatcher)
         let response = stubRequest.popResponse(for: httpbin)
         XCTAssertNil(response)
     }
     
     func testNoResponsesIfRequestNotMatch() {
         let httpbin = URLRequest(url: URL(string: "https://www.httpbin.org/")!)
-        let stubRequest = StubRequest("https://httpbin.org/", "GET", falseMatcher)
+        let stubRequest = StubRequest(falseMatcher)
         stubRequest.thenResponse { (urlrequest: URLRequest)  -> Response in
             return .success(status: 200, headers:[:], content: .noContent)
         }
@@ -71,7 +71,7 @@ class StubRequestTests: XCTestCase {
     
     func testFirstResponsesIfRequestMatching() {
         let httpbin = URLRequest(url: URL(string: "https://www.httpbin.org/")!)
-        let stubRequest = StubRequest("https://httpbin.org/", "GET", trueMatcher)
+        let stubRequest = StubRequest(trueMatcher)
         stubRequest.thenResponse { (urlrequest: URLRequest)  -> Response in
             return .success(status: 200, headers: ["Content-Type": "application/json; charset=utf-8"], content: .jsonString("hello"))
         }

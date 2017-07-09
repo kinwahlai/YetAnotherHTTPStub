@@ -30,9 +30,9 @@ class YetAnotherURLProtocolTests: XCTestCase {
     func testProtocolCanInitIfMatcherTrueAndHasRequest() {
         let request = URLRequest(url: URL(string: "https://httpbin.org/")!)
         YetAnotherURLProtocol.stubHTTP { session in
-            session.whenRequest(url: "https://httpbin.org/", method: "GET", matcher: { (urlrequest) -> (Bool) in
+            session.whenRequest { (urlrequest) -> (Bool) in
                 return true
-            })
+            }
         }
         XCTAssertTrue(YetAnotherURLProtocol.canInit(with: request))
     }
@@ -42,11 +42,11 @@ class YetAnotherURLProtocolTests: XCTestCase {
         
         let configuration = URLSessionConfiguration.default
         YetAnotherURLProtocol.stubHTTP(configuration) { session in
-            session.whenRequest(url: "https://httpbin.org/", method: "GET", matcher: { (urlrequest) -> (Bool) in
+            session.whenRequest { (urlrequest) -> (Bool) in
                 return true
-            }).thenResponse(responseBuilder: { (_) -> (Response) in
+            }.thenResponse { (_) -> (Response) in
                 return .error(status: 404)
-            })
+            }
         }
         
         let session = URLSession(configuration: configuration)
