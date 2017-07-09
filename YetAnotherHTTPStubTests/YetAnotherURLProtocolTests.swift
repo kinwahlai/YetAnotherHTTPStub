@@ -64,5 +64,4 @@ class YetAnotherURLProtocolTests: XCTestCase {
         }
     }
     
-    // xctest extension test
 }

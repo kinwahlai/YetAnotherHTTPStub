@@ -21,6 +21,10 @@ public class StubSession: NSObject {
         return stubRequests.count > 0
     }
     
+    public var protocolClass: AnyClass {
+        return YetAnotherURLProtocol.self
+    }
+    
     public init(uuid: UUID = UUID()) {
         self.uuid = uuid
         self.stubRequests = []
