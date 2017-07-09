@@ -16,6 +16,7 @@ public class StubSession: NSObject {
     internal var isProtocolRegistered = false
     internal var uuid: UUID
     internal var stubRequests: [StubRequest]
+    public var testCaseDidFinishBlock: (()->()) = {}
     
     public var hasRequest: Bool {
         return stubRequests.count > 0

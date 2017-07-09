@@ -15,8 +15,9 @@ extension StubSession: XCTestObservation {
     }
     
     public func testCaseDidFinish(_ testCase: XCTestCase) {
-        if StubSessionManager.sharedSession().isProtocolRegistered {
+        if self.isProtocolRegistered {
             XCTestObservationCenter.shared().removeTestObserver(self)
+            self.testCaseDidFinishBlock()
             StubSessionManager.removeSharedSession()
         }
     }
