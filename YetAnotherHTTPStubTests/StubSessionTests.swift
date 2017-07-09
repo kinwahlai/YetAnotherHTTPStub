@@ -38,13 +38,61 @@ class StubSessionTests: XCTestCase {
         let google = URLRequest(url: URL(string: "https://www.google.com/")!)
         let httpbin = URLRequest(url: URL(string: "https://www.httpbin.org/")!)
         
-        session.whenRequest { (urlrequest: URLRequest) -> Bool in
+        session.whenRequest(url: "https://www.google.com/", method: "GET") { (urlrequest: URLRequest) -> Bool in
             return urlrequest == google
         }
-        session.whenRequest { (urlrequest: URLRequest) -> Bool in
+        session.whenRequest(url: "https://httpbin.org/", method: "GET") { (urlrequest: URLRequest) -> Bool in
             return urlrequest == google
         }
         
         XCTAssertEqual(session.stubRequests.count, 2)
+    }
+    
+    func testAddProtocolToDefaultConfiguration() {
+        let configuration = URLSessionConfiguration.default
+        session.addProtocol(to: configuration)
+        let protocolClasses = (configuration.protocolClasses!).map({ "\($0)" })
+        XCTAssertEqual(protocolClasses.first!, "YetAnotherURLProtocol")
+    }
+    
+    func testAddProtocolToEphemeralConfiguration() {
+        let configuration = URLSessionConfiguration.ephemeral
+        session.addProtocol(to: configuration)
+        let protocolClasses = (configuration.protocolClasses!).map({ "\($0)" })
+        XCTAssertEqual(protocolClasses.first!, "YetAnotherURLProtocol")
+    }
+    
+    func testRemoveProtocolToDefaultConfiguration() {
+        let configuration = URLSessionConfiguration.default
+        session.addProtocol(to: configuration)
+        let protocolClasses = (configuration.protocolClasses!).map({ "\($0)" })
+        XCTAssertEqual(protocolClasses.first!, "YetAnotherURLProtocol")
+        
+        session.removeProtocol(from: configuration)
+        let newProtocolClasses = (configuration.protocolClasses!).map({ "\($0)" })
+        XCTAssertFalse(newProtocolClasses.contains("YetAnotherURLProtocol"))
+    }
+    
+    func testSessionCannotFindStubRequest() {
+        let google = URLRequest(url: URL(string: "https://www.google.com/")!)
+        let stubRequest = session.find(by: google)
+        XCTAssertNil(stubRequest)
+    }
+    func testStubRequestFound() {
+        var google = URLRequest(url: URL(string: "https://www.google.com/")!)
+        google.httpMethod = "POST"
+        let httpbin = URLRequest(url: URL(string: "https://www.httpbin.org/")!)
+        
+        session.whenRequest(url: "https://www.google.com/", method: "GET") { (urlrequest: URLRequest) -> Bool in
+            return urlrequest == google
+        }
+        session.whenRequest(url: "https://www.httpbin.org/", method: "GET") { (urlrequest: URLRequest) -> Bool in
+            return urlrequest == google
+        }
+        
+        let stubRequest = session.find(by: httpbin)
+        XCTAssertNotNil(stubRequest)
+        let anotherStubRequest = session.find(by: google)
+        XCTAssertNil(anotherStubRequest)
     }
 }

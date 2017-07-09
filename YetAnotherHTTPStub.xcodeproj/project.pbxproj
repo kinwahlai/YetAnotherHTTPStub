@@ -438,6 +438,7 @@
 				66D34DA81F108F520013E89F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		66D34DA91F108F520013E89F /* Build configuration list for PBXNativeTarget "YetAnotherHTTPStubTests" */ = {
 			isa = XCConfigurationList;
@@ -446,6 +447,7 @@
 				66D34DAB1F108F520013E89F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

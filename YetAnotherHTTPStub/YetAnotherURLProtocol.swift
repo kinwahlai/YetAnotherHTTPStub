@@ -9,15 +9,15 @@
 import Foundation
 
 class YetAnotherURLProtocol: URLProtocol {
-    class func stubHTTP(_ sessionBlock: (StubSession)->()) {
+    class func stubHTTP(_ configuration: URLSessionConfiguration? = nil, _ sessionBlock: (StubSession)->()) {
         let session = StubSessionManager.sharedSession()
-        session.registerProtocol()
+        session.addProtocol(to: configuration)
         // Here we may want to register to XCTestObservation so we can reset the session
         sessionBlock(session)
     }
     
     override class func canInit(with request:URLRequest) -> Bool {
-        return false
+        return (StubSessionManager.sharedSession().isProtocolRegistered && StubSessionManager.sharedSession().stubRequests.count > 0)
     }
     
     override class func canonicalRequest(for request: URLRequest) -> URLRequest {
@@ -25,7 +25,15 @@ class YetAnotherURLProtocol: URLProtocol {
     }
     
     override func startLoading() {
-        print("startLoading")
+        guard let stubRequest = StubSessionManager.sharedSession().find(by: request) else { return }
+        guard let stubResponse = stubRequest.popResponse(for: request) else { return }
+        let (urlResponse, content) = stubResponse.response(for: request)
+        
+        client?.urlProtocol(self, didReceive: urlResponse, cacheStoragePolicy: .notAllowed)
+        if let data = content.toData() {
+            client?.urlProtocol(self, didLoad: data)
+        }
+        client?.urlProtocolDidFinishLoading(self)
     }
     
     override func stopLoading() {

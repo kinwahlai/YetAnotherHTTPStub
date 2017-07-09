@@ -23,19 +23,34 @@ class StubSession {
     }
     
     @discardableResult
-    func registerProtocol() -> Bool {
-        self.isProtocolRegistered = URLProtocol.registerClass(YetAnotherURLProtocol.self)
+    func addProtocol(to configuration: URLSessionConfiguration?) -> Bool {
+        self.isProtocolRegistered = true
+        guard let configuration = configuration else {
+            return isProtocolRegistered
+        }
+        var protocolClasses: [AnyClass] = Array(configuration.protocolClasses!)
+        protocolClasses.insert(YetAnotherURLProtocol.self, at: 0)
+        configuration.protocolClasses = protocolClasses
         return isProtocolRegistered
     }
     
-    func unregisterProtocol() {
-        return URLProtocol.unregisterClass(YetAnotherURLProtocol.self)
+    func removeProtocol(from configuration: URLSessionConfiguration) {
+        self.isProtocolRegistered = false
+        let protocolClasses: [AnyClass] = Array(configuration.protocolClasses!)
+        configuration.protocolClasses = protocolClasses.filter({ $0 != YetAnotherURLProtocol.self })
     }
     
     @discardableResult
-    func whenRequest(matcher: @escaping Matcher) -> StubRequest {
-        let stubRequest = StubRequest(matcher)
+    func whenRequest(url: String, method: String, matcher: @escaping Matcher) -> StubRequest {
+        let stubRequest = StubRequest(url, method, matcher)
         stubRequests.append(stubRequest)
         return stubRequest
+    }
+    
+    func find(by urlRequest: URLRequest) -> StubRequest? {
+        guard let url = urlRequest.url?.absoluteString, let method = urlRequest.httpMethod else { return nil }
+        return stubRequests.first { (request) -> Bool in
+            return (request.url == url && request.method == method)
+        }
     }
 }

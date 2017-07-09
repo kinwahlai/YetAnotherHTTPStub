@@ -17,34 +17,52 @@ class YetAnotherURLProtocolTests: XCTestCase {
     }
     
     override func tearDown() {
+        StubSessionManager.removeSharedSession()
         super.tearDown()
     }
     
-    func testRegisterProtocolWhenStubHTTPIsCalled() {
-        var isProtocolRegistered = false
-        YetAnotherURLProtocol.stubHTTP { session in
-            isProtocolRegistered = session.isProtocolRegistered
-        }
-        XCTAssertTrue(isProtocolRegistered)
-    }
-    
-//    func testResetStubSessionWhenReceiveTearDownNotification() {
-//        var isProtocolRegistered = false
-//        YetAnotherURLProtocol.stubHTTP { session in
-//            isProtocolRegistered = session.isProtocolRegistered
-//        }
-//        XCTAssertTrue(isProtocolRegistered)
-//        XCTestObservationCenter
-//    }
-    
-    func testProtocolCannotInitIfProtocolAndRequestRegistered() {
+    func testProtocolCannotInitIfProtocolRegisteredButNoRequest() {
         let request = URLRequest(url: URL(string: "https://httpbin.org/")!)
         YetAnotherURLProtocol.stubHTTP { session in }
         XCTAssertFalse(YetAnotherURLProtocol.canInit(with: request))
     }
+
+    func testProtocolCanInitIfMatcherTrueAndHasRequest() {
+        let request = URLRequest(url: URL(string: "https://httpbin.org/")!)
+        YetAnotherURLProtocol.stubHTTP { session in
+            session.whenRequest(url: "https://httpbin.org/", method: "GET", matcher: { (urlrequest) -> (Bool) in
+                return true
+            })
+        }
+        XCTAssertTrue(YetAnotherURLProtocol.canInit(with: request))
+    }
     
-//    func testProtocolCannotInitIfProtocolAndRequestRegistered() {
-//        let session = StubSession()
-//        session.whenRequest(matcher: <#T##Matcher##Matcher##(URLRequest) -> (Bool)#>)
-//    }
+    func testIntegrationTestingFor404() {
+        let expectation = self.expectation(description: "StubTests")
+        
+        let configuration = URLSessionConfiguration.default
+        YetAnotherURLProtocol.stubHTTP(configuration) { session in
+            session.whenRequest(url: "https://httpbin.org/", method: "GET", matcher: { (urlrequest) -> (Bool) in
+                return true
+            }).thenResponse(responseBuilder: { (_) -> (Response) in
+                return .error(status: 404)
+            })
+        }
+        
+        let session = URLSession(configuration: configuration)
+        session.dataTask(with: URL(string: "https://httpbin.org/")!, completionHandler: { data, response, error in
+            DispatchQueue.main.async {
+                XCTAssertNotNil(response)
+                let statusCode = (response as! HTTPURLResponse).statusCode
+                XCTAssertEqual(statusCode, 404)
+                expectation.fulfill()
+            }
+        }).resume()
+        
+        waitForExpectations(timeout: 5) { error in
+            XCTAssertNil(error, "\(error)")
+        }
+    }
+    
+    // xctest extension test
 }

@@ -43,5 +43,4 @@ class StubSessionManagerTests: XCTestCase {
         let session2 = StubSessionManager.sharedSession()
         XCTAssertNotEqual(session1.uuid, session2.uuid)
     }
-    // manager can replace/reset session
 }
