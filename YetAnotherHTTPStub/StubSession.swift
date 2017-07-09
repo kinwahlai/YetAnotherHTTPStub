@@ -12,18 +12,22 @@ import Foundation
 // 1 session -> n matcher
 // 1 macther -> n response builder, operate in sequence
 
-class StubSession {
-    var isProtocolRegistered = false
-    var uuid: UUID
-    var stubRequests: [StubRequest]
+public class StubSession {
+    internal var isProtocolRegistered = false
+    internal var uuid: UUID
+    internal var stubRequests: [StubRequest]
     
-    init(uuid: UUID = UUID()) {
+    public var hasRequest: Bool {
+        return stubRequests.count > 0
+    }
+    
+    public init(uuid: UUID = UUID()) {
         self.uuid = uuid
         self.stubRequests = []
     }
     
     @discardableResult
-    func addProtocol(to configuration: URLSessionConfiguration?) -> Bool {
+    public func addProtocol(to configuration: URLSessionConfiguration?) -> Bool {
         self.isProtocolRegistered = true
         guard let configuration = configuration else {
             return isProtocolRegistered
@@ -34,23 +38,27 @@ class StubSession {
         return isProtocolRegistered
     }
     
-    func removeProtocol(from configuration: URLSessionConfiguration) {
+    public func removeProtocol(from configuration: URLSessionConfiguration) {
         self.isProtocolRegistered = false
         let protocolClasses: [AnyClass] = Array(configuration.protocolClasses!)
         configuration.protocolClasses = protocolClasses.filter({ $0 != YetAnotherURLProtocol.self })
     }
     
     @discardableResult
-    func whenRequest(url: String, method: String, matcher: @escaping Matcher) -> StubRequest {
+    public func whenRequest(url: String, method: String, matcher: @escaping Matcher) -> StubRequest {
         let stubRequest = StubRequest(url, method, matcher)
         stubRequests.append(stubRequest)
         return stubRequest
     }
     
-    func find(by urlRequest: URLRequest) -> StubRequest? {
+    public func find(by urlRequest: URLRequest) -> StubRequest? {
         guard let url = urlRequest.url?.absoluteString, let method = urlRequest.httpMethod else { return nil }
-        return stubRequests.first { (request) -> Bool in
-            return (request.url == url && request.method == method)
+        return stubRequests.first { (stub) -> Bool in
+            return stub.compare(url, method)
         }
     }
+}
+
+public func ==(lhs:StubSession, rhs:StubSession) -> Bool {
+    return (lhs.uuid == rhs.uuid)
 }

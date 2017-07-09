@@ -8,21 +8,22 @@
 
 import Foundation
 
-class StubSessionManager {
+public class StubSessionManager {
     private static var _sharedSession: StubSession?
-    class func sharedSession() -> StubSession {
+    public class func sharedSession() -> StubSession {
         if _sharedSession == nil {
             _sharedSession = StubSession()
         }
         return _sharedSession!
     }
-    class func newSession() -> StubSession {
+    
+    public class func newSession() -> StubSession {
         return StubSession()
     }
-    class func newSession(_ uuid: UUID) -> StubSession {
+    public class func newSession(_ uuid: UUID) -> StubSession {
         return StubSession(uuid: uuid)
     }
-    class func removeSharedSession() {
+    public class func removeSharedSession() {
         _sharedSession = nil
     }
 }

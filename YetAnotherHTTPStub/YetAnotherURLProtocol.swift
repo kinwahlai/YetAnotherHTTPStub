@@ -17,7 +17,7 @@ class YetAnotherURLProtocol: URLProtocol {
     }
     
     override class func canInit(with request:URLRequest) -> Bool {
-        return (StubSessionManager.sharedSession().isProtocolRegistered && StubSessionManager.sharedSession().stubRequests.count > 0)
+        return (StubSessionManager.sharedSession().isProtocolRegistered && StubSessionManager.sharedSession().hasRequest)
     }
     
     override class func canonicalRequest(for request: URLRequest) -> URLRequest {

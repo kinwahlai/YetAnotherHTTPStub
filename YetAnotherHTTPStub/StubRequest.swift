@@ -8,14 +8,15 @@
 
 import Foundation
 
-typealias Matcher = (URLRequest) -> (Bool)
+public typealias Matcher = (URLRequest) -> (Bool)
 
-class StubRequest {
-    let matcher: Matcher
-    let url: String
-    let method: String
-    var responses: [StubResponse]
-    init(_ url: String, _ method: String, _ matcher: @escaping Matcher) {
+public class StubRequest {
+    internal let matcher: Matcher
+    private let url: String
+    private let method: String
+    internal var responses: [StubResponse]
+    
+    public init(_ url: String, _ method: String, _ matcher: @escaping Matcher) {
         self.url = url
         self.method = method
         self.matcher = matcher
@@ -23,18 +24,22 @@ class StubRequest {
     }
     
     @discardableResult
-    func thenResponse(responseBuilder: @escaping Builder) -> Self {
+    public func thenResponse(responseBuilder: @escaping Builder) -> Self {
         let stubResponse = StubResponse(responseBuilder)
         self.responses.append(stubResponse)
         return self
     }
     
-    func popResponse(for request: URLRequest) -> StubResponse? {
+    public func popResponse(for request: URLRequest) -> StubResponse? {
         if matcher(request) {
             return responses.removeFirst()
         } else {
             return nil
         }
+    }
+    
+    internal func compare(_ url: String, _ method: String) -> Bool {
+        return (self.url == url && self.method == method)
     }
 }
 

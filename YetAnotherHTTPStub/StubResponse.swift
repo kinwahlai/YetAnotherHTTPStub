@@ -53,15 +53,16 @@ public enum Response {
     case error(status: Int)
 }
 
-typealias Builder = (URLRequest) -> (Response)
+public typealias Builder = (URLRequest) -> (Response)
 
-class StubResponse {
-    let builder: Builder
-    init(_ builder: @escaping Builder) {
+public class StubResponse {
+    internal let builder: Builder
+    
+    public init(_ builder: @escaping Builder) {
         self.builder = builder
     }
     
-    func response(for urlrequest: URLRequest) -> (HTTPURLResponse, StubContent) {
+    public func response(for urlrequest: URLRequest) -> (HTTPURLResponse, StubContent) {
         let response = builder(urlrequest)
         switch response {
         case .success(let status, let headers, let content):
