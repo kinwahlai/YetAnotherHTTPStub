@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6626132D1F12BC8E00F6007D /* StubSession+XCTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6626132C1F12BC8E00F6007D /* StubSession+XCTest.swift */; };
 		66D34D9C1F108F520013E89F /* YetAnotherHTTPStub.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66D34D921F108F520013E89F /* YetAnotherHTTPStub.framework */; };
 		66D34DA11F108F520013E89F /* YetAnotherURLProtocolTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66D34DA01F108F520013E89F /* YetAnotherURLProtocolTests.swift */; };
 		66D34DA31F108F520013E89F /* YetAnotherHTTPStub.h in Headers */ = {isa = PBXBuildFile; fileRef = 66D34D951F108F520013E89F /* YetAnotherHTTPStub.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -32,6 +33,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		6626132C1F12BC8E00F6007D /* StubSession+XCTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "StubSession+XCTest.swift"; sourceTree = "<group>"; };
 		66D34D921F108F520013E89F /* YetAnotherHTTPStub.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = YetAnotherHTTPStub.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		66D34D951F108F520013E89F /* YetAnotherHTTPStub.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = YetAnotherHTTPStub.h; sourceTree = "<group>"; };
 		66D34D961F108F520013E89F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -104,6 +106,7 @@
 				66D34DB51F1177550013E89F /* StubRequest.swift */,
 				66D34DBB1F1187CD0013E89F /* StubResponse.swift */,
 				66D34DC11F11B3090013E89F /* StubSessionManager.swift */,
+				6626132C1F12BC8E00F6007D /* StubSession+XCTest.swift */,
 			);
 			path = YetAnotherHTTPStub;
 			sourceTree = "<group>";
@@ -237,6 +240,7 @@
 				66D34DB61F1177550013E89F /* StubRequest.swift in Sources */,
 				66D34DBC1F1187CD0013E89F /* StubResponse.swift in Sources */,
 				66D34DB21F116EA50013E89F /* StubSession.swift in Sources */,
+				6626132D1F12BC8E00F6007D /* StubSession+XCTest.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

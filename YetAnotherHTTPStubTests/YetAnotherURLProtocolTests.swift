@@ -63,5 +63,4 @@ class YetAnotherURLProtocolTests: XCTestCase {
             XCTAssertNil(error, "\(error)")
         }
     }
-    
 }
