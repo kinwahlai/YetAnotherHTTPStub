@@ -8,7 +8,7 @@
 
 import Foundation
 
-public class YetAnotherURLProtocol: URLProtocol {
+internal class YetAnotherURLProtocol: URLProtocol {
     public class func stubHTTP(_ configuration: URLSessionConfiguration? = nil, _ sessionBlock: (StubSession)->()) {
         let session = StubSessionManager.sharedSession()
         session.addProtocol(to: configuration)
@@ -18,15 +18,15 @@ public class YetAnotherURLProtocol: URLProtocol {
 }
 
 extension YetAnotherURLProtocol {
-    public override class func canInit(with request:URLRequest) -> Bool {
+    internal override class func canInit(with request:URLRequest) -> Bool {
         return (StubSessionManager.sharedSession().isProtocolRegistered && StubSessionManager.sharedSession().hasRequest)
     }
     
-    public override class func canonicalRequest(for request: URLRequest) -> URLRequest {
+    internal override class func canonicalRequest(for request: URLRequest) -> URLRequest {
         return request
     }
     
-    public override func startLoading() {
+    internal override func startLoading() {
         guard let stubRequest = StubSessionManager.sharedSession().find(by: request) else { return }
         guard let stubResponse = stubRequest.popResponse(for: request) else { return }
         let (urlResponse, content) = stubResponse.response(for: request)
@@ -38,7 +38,7 @@ extension YetAnotherURLProtocol {
         client?.urlProtocolDidFinishLoading(self)
     }
     
-    public override func stopLoading() {
+    internal override func stopLoading() {
         print("stopLoading")
     }
 }

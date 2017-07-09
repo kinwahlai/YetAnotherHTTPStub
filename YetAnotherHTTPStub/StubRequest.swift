@@ -14,7 +14,7 @@ public class StubRequest: NSObject {
     internal let matcher: Matcher
     internal var responses: [StubResponse]
     
-    public init(_ matcher: @escaping Matcher) {
+    internal init(_ matcher: @escaping Matcher) {
         self.matcher = matcher
         self.responses = []
     }
@@ -26,7 +26,7 @@ public class StubRequest: NSObject {
         return self
     }
     
-    public func popResponse(for request: URLRequest) -> StubResponse? {
+    internal func popResponse(for request: URLRequest) -> StubResponse? {
         if matcher(request) {
             return responses.removeFirst()
         } else {

@@ -17,10 +17,10 @@ public class StubSessionManager: NSObject {
         return _sharedSession!
     }
     
-    public class func newSession() -> StubSession {
+    internal class func newSession() -> StubSession {
         return StubSession()
     }
-    public class func newSession(_ uuid: UUID) -> StubSession {
+    internal class func newSession(_ uuid: UUID) -> StubSession {
         return StubSession(uuid: uuid)
     }
     public class func removeSharedSession() {

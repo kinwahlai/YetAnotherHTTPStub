@@ -25,13 +25,13 @@ public class StubSession: NSObject {
         return YetAnotherURLProtocol.self
     }
     
-    public init(uuid: UUID = UUID()) {
+    internal init(uuid: UUID = UUID()) {
         self.uuid = uuid
         self.stubRequests = []
     }
     
     @discardableResult
-    public func addProtocol(to configuration: URLSessionConfiguration?) -> Bool {
+    internal func addProtocol(to configuration: URLSessionConfiguration?) -> Bool {
         self.isProtocolRegistered = true
         guard let configuration = configuration else {
             return isProtocolRegistered
@@ -42,7 +42,7 @@ public class StubSession: NSObject {
         return isProtocolRegistered
     }
     
-    public func removeProtocol(from configuration: URLSessionConfiguration) {
+    internal func removeProtocol(from configuration: URLSessionConfiguration) {
         self.isProtocolRegistered = false
         let protocolClasses: [AnyClass] = Array(configuration.protocolClasses!)
         configuration.protocolClasses = protocolClasses.filter({ $0 != YetAnotherURLProtocol.self })
@@ -55,7 +55,7 @@ public class StubSession: NSObject {
         return stubRequest
     }
     
-    public func find(by urlRequest: URLRequest) -> StubRequest? {
+    internal func find(by urlRequest: URLRequest) -> StubRequest? {
         return stubRequests.first { (stub) -> Bool in
             return stub.matcher(urlRequest)
         }

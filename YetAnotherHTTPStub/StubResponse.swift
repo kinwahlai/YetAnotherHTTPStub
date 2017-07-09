@@ -55,14 +55,14 @@ public enum Response {
 
 public typealias Builder = (URLRequest) -> (Response)
 
-public class StubResponse: NSObject {
+internal class StubResponse: NSObject {
     internal let builder: Builder
     
-    public init(_ builder: @escaping Builder) {
+    internal init(_ builder: @escaping Builder) {
         self.builder = builder
     }
     
-    public func response(for urlrequest: URLRequest) -> (HTTPURLResponse, StubContent) {
+    internal func response(for urlrequest: URLRequest) -> (HTTPURLResponse, StubContent) {
         let response = builder(urlrequest)
         switch response {
         case .success(let status, let headers, let content):
