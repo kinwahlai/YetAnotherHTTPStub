@@ -41,11 +41,8 @@ class StubRequestTests: XCTestCase {
 
     func testRequestHasMultipleStubResponse() {
         let stubRequest = StubRequest(trueMatcher)
-        stubRequest.thenResponse { (urlrequest: URLRequest)  -> Response in
-            return .success(status: 200, headers:[:], content: .noContent)
-        }.thenResponse { (urlrequest: URLRequest)  -> Response in
-                return .error(status: 404)
-        }
+        stubRequest.thenResponse(responseBuilder: http(200, headers: [:], content: .noContent))
+            .thenResponse(responseBuilder: http(404, headers: [:], content: .noContent))
         
         XCTAssertEqual(stubRequest.responses.count, 2)
     }
@@ -61,9 +58,7 @@ class StubRequestTests: XCTestCase {
     func testNoResponsesIfRequestNotMatch() {
         let httpbin = URLRequest(url: URL(string: "https://www.httpbin.org/")!)
         let stubRequest = StubRequest(falseMatcher)
-        stubRequest.thenResponse { (urlrequest: URLRequest)  -> Response in
-            return .success(status: 200, headers:[:], content: .noContent)
-        }
+        stubRequest.thenResponse(responseBuilder: http(200, headers: [:], content: .noContent))
         let response = stubRequest.popResponse(for: httpbin)
         XCTAssertNil(response)
     }
@@ -72,14 +67,18 @@ class StubRequestTests: XCTestCase {
     func testFirstResponsesIfRequestMatching() {
         let httpbin = URLRequest(url: URL(string: "https://www.httpbin.org/")!)
         let stubRequest = StubRequest(trueMatcher)
-        stubRequest.thenResponse { (urlrequest: URLRequest)  -> Response in
-            return .success(status: 200, headers: ["Content-Type": "application/json; charset=utf-8"], content: .jsonString("hello"))
-        }
+        stubRequest.thenResponse(responseBuilder: jsonString("hello"))
+        
         let stubResponse = stubRequest.popResponse(for: httpbin)
-        let (urlResponse, content) = stubResponse!.response(for: httpbin)
-        XCTAssertNotNil(urlResponse)
-        XCTAssertEqual(urlResponse.statusCode, 200)
-        XCTAssertEqual(urlResponse.allHeaderFields as! [String: String], ["Content-Type": "application/json; charset=utf-8"])
-        XCTAssertTrue(content == StubContent.jsonString("hello"))
+        
+        if case .success(let urlResponse, let content) = stubResponse!.builder(httpbin) {
+            XCTAssertNotNil(urlResponse)
+            XCTAssertEqual(urlResponse.statusCode, 200)
+            XCTAssertEqual(urlResponse.mimeType, "application/json")
+            XCTAssertEqual(urlResponse.textEncodingName, "utf-8")
+            XCTAssertTrue(content == StubContent.data("hello".data(using: String.Encoding.utf8)!))
+        } else {
+            XCTFail()
+        }
     }
 }
