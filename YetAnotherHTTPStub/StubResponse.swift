@@ -9,20 +9,20 @@
 import Foundation
 
 public enum StubContent {
-//    case json(Any)
+    case json(Any)
     case jsonString(String)
     case data(Data)
     case noContent
     
     func toData() -> Data? {
         switch self {
-//        case .json(let body):
-//            do {
-//                let data = try JSONSerialization.data(withJSONObject: body, options: JSONSerialization.WritingOptions())
-//                return data
-//            } catch {
-//                return nil
-//            }
+        case .json(let body):
+            do {
+                let data = try JSONSerialization.data(withJSONObject: body, options: JSONSerialization.WritingOptions())
+                return data
+            } catch {
+                return nil
+            }
         case .jsonString(let string):
             return string.data(using: String.Encoding.utf8)
         case .data(let data):
@@ -51,6 +51,7 @@ public func ==(lhs:StubContent, rhs:StubContent) -> Bool {
 public enum Response {
     case success(status: Int, headers: Dictionary<String, String>, content: StubContent)
     case error(status: Int)
+    case errorWithContent(status: Int, content: StubContent)
 }
 
 public typealias Builder = (URLRequest) -> (Response)
@@ -69,6 +70,8 @@ internal class StubResponse: NSObject {
             return (HTTPURLResponse(url: urlrequest.url!, statusCode: status, httpVersion: "HTTP/1.1", headerFields: headers)!, content)
         case .error(let status):
             return (HTTPURLResponse(url: urlrequest.url!, statusCode: status, httpVersion: "HTTP/1.1", headerFields: [:])!, .noContent)
+        case .errorWithContent(let status, let content):
+            return (HTTPURLResponse(url: urlrequest.url!, statusCode: status, httpVersion: "HTTP/1.1", headerFields: [:])!, content)
         }
     }
 }
