@@ -70,8 +70,8 @@ class YetAnotherURLProtocolTests: XCTestCase {
         let configuration = URLSessionConfiguration.default
         YetAnotherURLProtocol.stubHTTP(configuration) { session in
             session.addToTestObserver()
-            session.whenRequest { (_) -> (Bool) in
-                return true
+            session.whenRequest {
+                return everything($0)
                 }.thenResponse { (_) -> (Response) in
                     return Response.success(status: 200, headers: [:], content: StubContent.jsonString("sucsess"))
                 }.thenResponse { (_) -> (Response) in

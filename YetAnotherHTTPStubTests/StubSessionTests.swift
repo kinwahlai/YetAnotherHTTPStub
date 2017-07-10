@@ -84,15 +84,9 @@ class StubSessionTests: XCTestCase {
         google.httpMethod = "POST"
         let httpbin = URLRequest(url: URL(string: "https://www.httpbin.org/")!)
         
+        session.whenRequest(matcher: http(.get, uri: "https://www.google.com/"))
         session.whenRequest { (urlrequest: URLRequest) -> Bool in
-            guard let urlstring = urlrequest.url?.absoluteString, let method = urlrequest.httpMethod else { return false }
-            let result = (urlstring == "https://www.google.com/" && method == "GET")
-            return result
-        }
-        session.whenRequest { (urlrequest: URLRequest) -> Bool in
-            guard let urlstring = urlrequest.url?.absoluteString, let method = urlrequest.httpMethod else { return false }
-            let result = (urlstring == "https://www.httpbin.org/" && method == "GET")
-            return result
+            return http(.get, uri: "https://www.httpbin.org/")(urlrequest)
         }
         
         let stubRequest = session.find(by: httpbin)
