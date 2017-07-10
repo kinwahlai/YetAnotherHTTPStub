@@ -45,9 +45,7 @@ class YetAnotherURLProtocolTests: XCTestCase {
             session.addToTestObserver()
             session.whenRequest { (urlrequest) -> (Bool) in
                 return true
-                }.thenResponse { (_) -> (Response) in
-                    return .error(status: 404)
-            }
+                }.thenResponse(responseBuilder: http(404))
         }
         
         let session = URLSession(configuration: configuration)
@@ -72,13 +70,8 @@ class YetAnotherURLProtocolTests: XCTestCase {
             session.addToTestObserver()
             session.whenRequest {
                 return everything($0)
-                }.thenResponse { (_) -> (Response) in
-                    return Response.success(status: 200, headers: [:], content: StubContent.jsonString("sucsess"))
-                }.thenResponse { (_) -> (Response) in
-                    return Response.success(status: 404, headers: [:], content: StubContent.jsonString("{\"errors\": \"something\""))
-            }
-            
-            
+                }.thenResponse(responseBuilder: jsonString("{\"hello\":\"world\"}", status: 200))
+                .thenResponse(responseBuilder: jsonString("{\"errors\": \"something\"", status: 404))
         }
         
         let session = URLSession(configuration: configuration)

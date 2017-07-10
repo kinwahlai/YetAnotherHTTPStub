@@ -10,7 +10,7 @@ import Foundation
 import XCTest
 @testable import YetAnotherHTTPStub
 
-class MatcherTests: XCTestCase {
+class MatchersTests: XCTestCase {
     var urlrequest: URLRequest!
     var invalidRequest: URLRequest!
     var urlWithPathRequest: URLRequest!
