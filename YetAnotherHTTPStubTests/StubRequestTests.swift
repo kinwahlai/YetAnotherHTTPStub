@@ -71,7 +71,7 @@ class StubRequestTests: XCTestCase {
         
         let stubResponse = stubRequest.popResponse(for: httpbin)
         
-        if case .success(let urlResponse, let content) = stubResponse!.builder(httpbin) {
+        if case .success(let urlResponse, let content) = stubResponse!(httpbin) {
             XCTAssertNotNil(urlResponse)
             XCTAssertEqual(urlResponse.statusCode, 200)
             XCTAssertEqual(urlResponse.mimeType, "application/json")
