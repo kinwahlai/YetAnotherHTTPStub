@@ -27,7 +27,7 @@ public class StubRequest: NSObject {
     }
     
     internal func popResponse(for request: URLRequest) -> StubResponse? {
-        if matcher(request) {
+        if matcher(request) && !responses.isEmpty {
             return responses.removeFirst()
         } else {
             return nil
