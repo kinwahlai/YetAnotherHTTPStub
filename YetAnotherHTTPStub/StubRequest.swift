@@ -12,7 +12,7 @@ public typealias Matcher = (URLRequest) -> (Bool)
 
 public class StubRequest: NSObject {
     internal let matcher: Matcher
-    internal var responses: [StubResponse]
+    internal var responses: [Builder]
     
     internal init(_ matcher: @escaping Matcher) {
         self.matcher = matcher
@@ -21,12 +21,11 @@ public class StubRequest: NSObject {
     
     @discardableResult
     public func thenResponse(responseBuilder: @escaping Builder) -> Self {
-        let stubResponse = StubResponse(responseBuilder)
-        self.responses.append(stubResponse)
+        self.responses.append(responseBuilder)
         return self
     }
     
-    internal func popResponse(for request: URLRequest) -> StubResponse? {
+    internal func popResponse(for request: URLRequest) -> Builder? {
         if matcher(request) && !responses.isEmpty {
             return responses.removeFirst()
         } else {

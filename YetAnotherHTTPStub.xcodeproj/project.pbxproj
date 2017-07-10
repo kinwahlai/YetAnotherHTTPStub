@@ -21,7 +21,6 @@
 		66D34DB61F1177550013E89F /* StubRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66D34DB51F1177550013E89F /* StubRequest.swift */; };
 		66D34DBA1F1180940013E89F /* StubRequestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66D34DB91F1180940013E89F /* StubRequestTests.swift */; };
 		66D34DBC1F1187CD0013E89F /* StubResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66D34DBB1F1187CD0013E89F /* StubResponse.swift */; };
-		66D34DBE1F1190D20013E89F /* StubResponseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66D34DBD1F1190D20013E89F /* StubResponseTests.swift */; };
 		66D34DC01F11B25C0013E89F /* StubSessionManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66D34DBF1F11B25C0013E89F /* StubSessionManagerTests.swift */; };
 		66D34DC21F11B3090013E89F /* StubSessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66D34DC11F11B3090013E89F /* StubSessionManager.swift */; };
 /* End PBXBuildFile section */
@@ -54,7 +53,6 @@
 		66D34DB51F1177550013E89F /* StubRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StubRequest.swift; sourceTree = "<group>"; };
 		66D34DB91F1180940013E89F /* StubRequestTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StubRequestTests.swift; sourceTree = "<group>"; };
 		66D34DBB1F1187CD0013E89F /* StubResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StubResponse.swift; sourceTree = "<group>"; };
-		66D34DBD1F1190D20013E89F /* StubResponseTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StubResponseTests.swift; sourceTree = "<group>"; };
 		66D34DBF1F11B25C0013E89F /* StubSessionManagerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StubSessionManagerTests.swift; sourceTree = "<group>"; };
 		66D34DC11F11B3090013E89F /* StubSessionManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StubSessionManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -128,7 +126,6 @@
 				66D34DA21F108F520013E89F /* Info.plist */,
 				66D34DB31F1173530013E89F /* StubSessionTests.swift */,
 				66D34DB91F1180940013E89F /* StubRequestTests.swift */,
-				66D34DBD1F1190D20013E89F /* StubResponseTests.swift */,
 				66D34DBF1F11B25C0013E89F /* StubSessionManagerTests.swift */,
 				66C64F291F13340100ED8B96 /* MatchersTests.swift */,
 				667C0C531F13EE4C005B4712 /* BuildersTests.swift */,
@@ -267,7 +264,6 @@
 				66D34DA11F108F520013E89F /* YetAnotherURLProtocolTests.swift in Sources */,
 				667C0C541F13EE4C005B4712 /* BuildersTests.swift in Sources */,
 				66D34DC01F11B25C0013E89F /* StubSessionManagerTests.swift in Sources */,
-				66D34DBE1F1190D20013E89F /* StubResponseTests.swift in Sources */,
 				66D34DBA1F1180940013E89F /* StubRequestTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

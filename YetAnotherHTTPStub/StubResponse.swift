@@ -29,16 +29,9 @@ public func ==(lhs:StubContent, rhs:StubContent) -> Bool {
 }
 
 public enum Response {
-    case success(response: HTTPURLResponse, content: StubContent) // rename to success
+    case success(response: HTTPURLResponse, content: StubContent)
     case failure(NSError)
 }
 
-public typealias Builder = (URLRequest) -> (Response)
 
-internal class StubResponse: NSObject {
-    internal let builder: Builder
-    
-    internal init(_ builder: @escaping Builder) {
-        self.builder = builder
-    }
-}
+public typealias Builder = (URLRequest) -> (Response)
