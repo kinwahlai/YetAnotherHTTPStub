@@ -46,15 +46,33 @@ class StubRequestTests: XCTestCase {
         
         XCTAssertEqual(stubRequest.responses.count, 2)
     }
-    
-    
-    func testNoResponsesIfDeveloperDidntSetResponse() {
+
+    func testReturnFailureResponseIfDeveloperDidntSetResponse() {
         let httpbin = URLRequest(url: URL(string: "https://www.httpbin.org/")!)
-        let stubRequest = StubRequest(falseMatcher)
+        let stubRequest = StubRequest(trueMatcher)
         let response = stubRequest.popResponse(for: httpbin)
-        XCTAssertNil(response)
+        if case .failure(let error) = response!(httpbin) {
+            XCTAssertEqual(error.localizedDescription, "There isn't any(more) response for this request https://www.httpbin.org/")
+        } else {
+            XCTFail()
+        }
     }
     
+    func testReturnFailureResponseIfResponseStackBecomeEmpty() {
+        let httpbin = URLRequest(url: URL(string: "https://www.httpbin.org/")!)
+        let stubRequest = StubRequest(trueMatcher)
+        stubRequest.thenResponse(responseBuilder: jsonString("hello1"))
+
+        _ = stubRequest.popResponse(for: httpbin)
+        let response = stubRequest.popResponse(for: httpbin)
+
+        if case .failure(let error) = response!(httpbin) {
+            XCTAssertEqual(error.localizedDescription, "There isn't any(more) response for this request https://www.httpbin.org/")
+        } else {
+            XCTFail()
+        }
+    }
+
     func testNoResponsesIfRequestNotMatch() {
         let httpbin = URLRequest(url: URL(string: "https://www.httpbin.org/")!)
         let stubRequest = StubRequest(falseMatcher)

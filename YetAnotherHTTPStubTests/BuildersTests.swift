@@ -43,7 +43,7 @@ class BuildersTests: XCTestCase {
     }
     
     func testBuildFailureResponse() {
-        let yaError = NSError(domain: "YetAnotherTestError", code: 0, userInfo: nil)
+        let yaError = StubError("Any Error")
         let urlrequest = URLRequest(url: URL(string: "https://www.httpbin.org/")!)
         let response = failure(yaError)(urlrequest)
         if case .failure(let error) = response {

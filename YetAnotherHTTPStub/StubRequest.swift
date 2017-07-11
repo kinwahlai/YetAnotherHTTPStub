@@ -1,5 +1,5 @@
 //
-//  YetAnotherStubRequest.swift
+//  StubRequest.swift
 //  YetAnotherHTTPStub
 //
 //  Created by Darren Lai on 7/8/17.
@@ -26,12 +26,11 @@ public class StubRequest: NSObject {
     }
     
     internal func popResponse(for request: URLRequest) -> Builder? {
-        if matcher(request) && !responses.isEmpty {
-            return responses.removeFirst()
+        guard matcher(request) == true else { return nil }
+        if responses.isEmpty {
+            return failure(StubError("There isn't any(more) response for this request \(request)"))
         } else {
-            return nil
+            return responses.removeFirst()
         }
     }
 }
-
-// func ==(lhs:StubRequest, rhs:StubRequest) -> Bool {
