@@ -9,9 +9,12 @@
 import Foundation
 
 public class YetAnotherURLProtocol: URLProtocol {
-    public class func stubHTTP(_ sessionBlock: (StubSession)->()) {
+    public class func stubHTTP(_ addSessionToXCTestObservationCenter: Bool = true, _ sessionBlock: (StubSession)->()) {
         let session = StubSessionManager.sharedSession()
         session.injectProtocolToDefaultConfigs()
+        if addSessionToXCTestObservationCenter {
+            session.addToTestObserver()
+        }
         sessionBlock(session)
     }
 }
