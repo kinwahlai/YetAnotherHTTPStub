@@ -42,7 +42,6 @@ class YetAnotherURLProtocolTests: XCTestCase {
         
         // NOTE: Create your stub before get your session configuration
         YetAnotherURLProtocol.stubHTTP { session in
-            session.addToTestObserver()
             session.whenRequest { (urlrequest) -> (Bool) in
                 return true
                 }.thenResponse(responseBuilder: http(404))
@@ -67,7 +66,6 @@ class YetAnotherURLProtocolTests: XCTestCase {
     func testIntegrationTestingWithSequenceResponse() {
         let expectation = self.expectation(description: "StubTests1")
         YetAnotherURLProtocol.stubHTTP { session in
-            session.addToTestObserver()
             session.whenRequest {
                 return everything($0)
                 }.thenResponse(responseBuilder: jsonString("{\"hello\":\"world\"}", status: 200))
