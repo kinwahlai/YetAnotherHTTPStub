@@ -8,6 +8,23 @@
 
 import Foundation
 
+// MARK: - Error
+public struct StubError: Error, Equatable {
+    var message: String
+    var localizedDescription: String {
+        return message
+    }
+    
+    init(_ message: String) {
+        self.message = message
+    }
+}
+
+public func ==(lhs:StubError, rhs:StubError) -> Bool {
+    return lhs.message == rhs.message
+}
+
+// MARK: - Content
 public enum StubContent: ExpressibleByNilLiteral, Equatable  {
     public init(nilLiteral: ()) {
         self = .noContent
@@ -28,10 +45,10 @@ public func ==(lhs:StubContent, rhs:StubContent) -> Bool {
     }
 }
 
-public enum Response {
+// MARK: - StubResponse
+public enum StubResponse {
     case success(response: HTTPURLResponse, content: StubContent)
-    case failure(NSError)
+    case failure(StubError)
 }
 
-
-public typealias Builder = (URLRequest) -> (Response)
+public typealias Builder = (URLRequest) -> (StubResponse)

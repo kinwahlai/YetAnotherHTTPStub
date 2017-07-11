@@ -1,5 +1,5 @@
 //
-//  YetAnotherStubSession.swift
+//  StubSession.swift
 //  YetAnotherHTTPStub
 //
 //  Created by Darren Lai on 7/8/17.
