@@ -31,22 +31,16 @@ public class StubSession: NSObject {
         self.stubRequests = []
     }
     
-    @discardableResult
-    internal func addProtocol(to configuration: URLSessionConfiguration?) -> Bool {
-        self.isProtocolRegistered = true
-        guard let configuration = configuration else {
-            return isProtocolRegistered
+    func injectProtocolToDefaultConfigs() {
+        guard isProtocolRegistered == false else { return }
+        let configuration = URLSessionConfiguration.default
+        if (configuration.protocolClasses!).map({ "\($0)" }).contains("YetAnotherURLProtocol") {
+            isProtocolRegistered = true
+            return
         }
-        var protocolClasses: [AnyClass] = Array(configuration.protocolClasses!)
-        protocolClasses.insert(YetAnotherURLProtocol.self, at: 0)
-        configuration.protocolClasses = protocolClasses
-        return isProtocolRegistered
-    }
-    
-    internal func removeProtocol(from configuration: URLSessionConfiguration) {
-        self.isProtocolRegistered = false
-        let protocolClasses: [AnyClass] = Array(configuration.protocolClasses!)
-        configuration.protocolClasses = protocolClasses.filter({ $0 != YetAnotherURLProtocol.self })
+        
+        URLSessionConfiguration.swizzleYetAnotherHTTPStubSessionConfiguration()
+        isProtocolRegistered = true
     }
     
     @discardableResult

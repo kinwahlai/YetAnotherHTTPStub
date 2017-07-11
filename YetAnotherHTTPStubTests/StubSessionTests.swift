@@ -49,28 +49,17 @@ class StubSessionTests: XCTestCase {
     }
     
     func testAddProtocolToDefaultConfiguration() {
-        let configuration = URLSessionConfiguration.default
-        session.addProtocol(to: configuration)
-        let protocolClasses = (configuration.protocolClasses!).map({ "\($0)" })
-        XCTAssertEqual(protocolClasses.first!, "YetAnotherURLProtocol")
-    }
-    
-    func testAddProtocolToEphemeralConfiguration() {
-        let configuration = URLSessionConfiguration.ephemeral
-        session.addProtocol(to: configuration)
-        let protocolClasses = (configuration.protocolClasses!).map({ "\($0)" })
-        XCTAssertEqual(protocolClasses.first!, "YetAnotherURLProtocol")
-    }
-    
-    func testRemoveProtocolToDefaultConfiguration() {
-        let configuration = URLSessionConfiguration.default
-        session.addProtocol(to: configuration)
-        let protocolClasses = (configuration.protocolClasses!).map({ "\($0)" })
-        XCTAssertEqual(protocolClasses.first!, "YetAnotherURLProtocol")
+        XCTAssertFalse(session.isProtocolRegistered)
+        session.injectProtocolToDefaultConfigs()
+        let defaultConfiguration = URLSessionConfiguration.default
+        let defaultProtocolClasses = (defaultConfiguration.protocolClasses!).map({ "\($0)" })
+        XCTAssertEqual(defaultProtocolClasses.first!, "YetAnotherURLProtocol")
         
-        session.removeProtocol(from: configuration)
-        let newProtocolClasses = (configuration.protocolClasses!).map({ "\($0)" })
-        XCTAssertFalse(newProtocolClasses.contains("YetAnotherURLProtocol"))
+        let ephemeralConfiguration = URLSessionConfiguration.default
+        let ephemeralProtocolClasses = (ephemeralConfiguration.protocolClasses!).map({ "\($0)" })
+        XCTAssertEqual(ephemeralProtocolClasses.first!, "YetAnotherURLProtocol")
+        
+        XCTAssertTrue(session.isProtocolRegistered)
     }
     
     func testSessionCannotFindStubRequest() {

@@ -40,14 +40,15 @@ class YetAnotherURLProtocolTests: XCTestCase {
     func testIntegrationTestingFor404() {
         let expectation = self.expectation(description: "StubTests")
         
-        let configuration = URLSessionConfiguration.default
-        YetAnotherURLProtocol.stubHTTP(configuration) { session in
+        // NOTE: Create your stub before get your session configuration
+        YetAnotherURLProtocol.stubHTTP { session in
             session.addToTestObserver()
             session.whenRequest { (urlrequest) -> (Bool) in
                 return true
                 }.thenResponse(responseBuilder: http(404))
         }
         
+        let configuration = URLSessionConfiguration.default
         let session = URLSession(configuration: configuration)
         session.dataTask(with: URL(string: "https://httpbin.org/")!, completionHandler: { data, response, error in
             DispatchQueue.main.async {
@@ -65,8 +66,7 @@ class YetAnotherURLProtocolTests: XCTestCase {
     
     func testIntegrationTestingWithSequenceResponse() {
         let expectation = self.expectation(description: "StubTests1")
-        let configuration = URLSessionConfiguration.default
-        YetAnotherURLProtocol.stubHTTP(configuration) { session in
+        YetAnotherURLProtocol.stubHTTP { session in
             session.addToTestObserver()
             session.whenRequest {
                 return everything($0)
@@ -74,6 +74,7 @@ class YetAnotherURLProtocolTests: XCTestCase {
                 .thenResponse(responseBuilder: jsonString("{\"errors\": \"something\"", status: 404))
         }
         
+        let configuration = URLSessionConfiguration.default
         let session = URLSession(configuration: configuration)
         let datatask2 = session.dataTask(with: URL(string: "https://httpbin.org/GET")!, completionHandler: { data, response, error in
             DispatchQueue.main.async {
