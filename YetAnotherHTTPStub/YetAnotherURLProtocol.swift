@@ -9,10 +9,9 @@
 import Foundation
 
 public class YetAnotherURLProtocol: URLProtocol {
-    public class func stubHTTP(_ configuration: URLSessionConfiguration? = nil, _ sessionBlock: (StubSession)->()) {
+    public class func stubHTTP(_ sessionBlock: (StubSession)->()) {
         let session = StubSessionManager.sharedSession()
-        session.addProtocol(to: configuration)
-        // Here we may want to register to XCTestObservation so we can reset the session
+        session.injectProtocolToDefaultConfigs()
         sessionBlock(session)
     }
 }
