@@ -1,7 +1,8 @@
 # YetAnotherHTTPStub
 
 [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
-[![https://img.shields.io/badge/bitcoin-donate-green.svg](https://img.shields.io/badge/bitcoin-donate-green.svg)](#donation)
+[![https://img.shields.io/badge/bitcoin-donate-blue.svg](https://img.shields.io/badge/bitcoin-donate-blue.svg)](#donation)
+[![https://img.shields.io/badge/paypal.me-donate-blue.svg](https://img.shields.io/badge/paypal.me-donate-blue.svg)](#donation)
 
 In many case, we need to mock the network response when we writing unit test that has network request, like calling an API.
 
@@ -94,14 +95,18 @@ func matcher(request:NSURLRequest) -> StubResponse {
 ## Donation
 
 <table>
- <tr>
-	<td>
-        <img src="./kinwahlai-bitcoin.png"/>
-    </td>
-    <td>If you like my work on <b>YetAnotherHTTPStub</b> or to support open source, consider a small donation to my bitcoin address:
-    <a href="bitcoin:1BGjTUSctF7QoEnC4KyRwUoNmWeVnpmECM?amount=0.005">1BGjTUSctF7QoEnC4KyRwUoNmWeVnpmECM</a>
-    </td>
- </tr>
+    <tr>
+        <td colspan="2"> If you like my work on <b>YetAnotherHTTPStub</b> or to support open source, consider a small donation to my bitcoin address or paypal.me: </td>
+    </tr>
+    <tr>
+        <td colspan="2"><a href="https://www.paypal.me/KinWahLai/10">Donate via Paypal.me</a></td>
+    </tr>
+    <tr>
+        <td>
+            <img src="./kinwahlai-bitcoin.png"/>
+        </td>
+        <td><a href="bitcoin:1PdU216MXW7QTvj1pB4PBD4ztD4vh88bnJ?amount=0.005">1PdU216MXW7QTvj1pB4PBD4ztD4vh88bnJ</a></td>
+    </tr>
 </table>
 
 ## License
