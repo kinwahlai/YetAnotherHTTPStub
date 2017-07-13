@@ -1,0 +1,3 @@
+language: objective-c
+xcode_project: YetAnotherHTTPStub.xcodeproj
+xcode_scheme: YetAnotherHTTPStub
