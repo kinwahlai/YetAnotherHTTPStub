@@ -2,3 +2,4 @@ language: objective-c
 xcode_project: YetAnotherHTTPStub.xcodeproj
 xcode_scheme: YetAnotherHTTPStub
 osx_image: xcode8.3
+script: xcodebuild test -project YetAnotherHTTPStub.xcodeproj -scheme YetAnotherHTTPStub -sdk iphonesimulator -destination "name=iPhone SE"

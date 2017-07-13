@@ -1,5 +1,6 @@
 # YetAnotherHTTPStub
 
+[![Build Status](https://travis-ci.org/kinwahlai/YetAnotherHTTPStub.svg?branch=master)](https://travis-ci.org/kinwahlai/YetAnotherHTTPStub)
 [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
 [![https://img.shields.io/badge/bitcoin-donate-blue.svg](https://img.shields.io/badge/bitcoin-donate-blue.svg)](#donation)
 [![https://img.shields.io/badge/paypal.me-donate-blue.svg](https://img.shields.io/badge/paypal.me-donate-blue.svg)](#donation)
