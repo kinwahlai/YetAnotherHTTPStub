@@ -53,4 +53,26 @@ public enum Response {
 
 public typealias Builder = (URLRequest) -> (Response)
 
+public class StubResponse: NSObject {
+    fileprivate let builder: Builder
+    init(_ builder: @escaping Builder) {
+        self.builder = builder
+    }
+    
+    public func reply(via urlProtocol: URLProtocol) {
+        let request = urlProtocol.request
+        let response = builder(request)
+        let client = urlProtocol.client
+        switch response {
+        case .success(let urlResponse, let content):
+            client?.urlProtocol(urlProtocol, didReceive: urlResponse, cacheStoragePolicy: URLCache.StoragePolicy.notAllowed)
+            if case .data(let data) = content {
+                client?.urlProtocol(urlProtocol, didLoad: data)
+            }
+            client?.urlProtocolDidFinishLoading(urlProtocol)
+        case .failure(let error):
+            client?.urlProtocol(urlProtocol, didFailWithError: error)
+        }
+    }
+}
 

@@ -26,6 +26,7 @@
 		66D34DBC1F1187CD0013E89F /* StubResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66D34DBB1F1187CD0013E89F /* StubResponse.swift */; };
 		66D34DC01F11B25C0013E89F /* StubSessionManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66D34DBF1F11B25C0013E89F /* StubSessionManagerTests.swift */; };
 		66D34DC21F11B3090013E89F /* StubSessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66D34DC11F11B3090013E89F /* StubSessionManager.swift */; };
+		66E3A11C1F1AA81700309668 /* StubResponseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66E3A11B1F1AA81700309668 /* StubResponseTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -61,6 +62,7 @@
 		66D34DBB1F1187CD0013E89F /* StubResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StubResponse.swift; sourceTree = "<group>"; };
 		66D34DBF1F11B25C0013E89F /* StubSessionManagerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StubSessionManagerTests.swift; sourceTree = "<group>"; };
 		66D34DC11F11B3090013E89F /* StubSessionManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StubSessionManager.swift; sourceTree = "<group>"; };
+		66E3A11B1F1AA81700309668 /* StubResponseTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StubResponseTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -139,6 +141,7 @@
 				66C64F291F13340100ED8B96 /* MatchersTests.swift */,
 				667C0C531F13EE4C005B4712 /* BuildersTests.swift */,
 				66998C371F1481010032332C /* StubSession+URLSessionConfigurationTests.swift */,
+				66E3A11B1F1AA81700309668 /* StubResponseTests.swift */,
 			);
 			path = YetAnotherHTTPStubTests;
 			sourceTree = "<group>";
@@ -272,6 +275,7 @@
 			files = (
 				66C64F2A1F13340100ED8B96 /* MatchersTests.swift in Sources */,
 				66D34DB41F1173530013E89F /* StubSessionTests.swift in Sources */,
+				66E3A11C1F1AA81700309668 /* StubResponseTests.swift in Sources */,
 				66998C381F1481010032332C /* StubSession+URLSessionConfigurationTests.swift in Sources */,
 				66D34DA11F108F520013E89F /* YetAnotherURLProtocolTests.swift in Sources */,
 				667C0C541F13EE4C005B4712 /* BuildersTests.swift in Sources */,
