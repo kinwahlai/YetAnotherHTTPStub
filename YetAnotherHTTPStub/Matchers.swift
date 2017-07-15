@@ -18,7 +18,7 @@ public func nothing(_ urlrequest: URLRequest) -> Bool {
 
 public func uri(_ uri:String) -> (_ urlrequest: URLRequest) -> Bool {
     return { (_ urlrequest: URLRequest) -> Bool in
-        guard let urlstring = urlrequest.url?.absoluteString, let path = urlrequest.url?.path else {
+        guard let urlstring = urlrequest.url?.absoluteString, let _ = urlrequest.url?.path else {
             return false
         }
         let predicate = NSPredicate(format: "SELF MATCHES %@", uri.replacingOccurrences(of: "?", with: "\\?"))

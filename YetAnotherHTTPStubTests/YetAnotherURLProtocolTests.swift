@@ -59,7 +59,7 @@ class YetAnotherURLProtocolTests: XCTestCase {
         }).resume()
         
         waitForExpectations(timeout: 5) { error in
-            XCTAssertNil(error, "\(error)")
+            XCTAssertNil(error, "\(String(describing: error))")
         }
     }
     
@@ -95,7 +95,7 @@ class YetAnotherURLProtocolTests: XCTestCase {
         
         dataTask1.resume()
         waitForExpectations(timeout: 5) { error in
-            XCTAssertNil(error, "\(error)")
+            XCTAssertNil(error, "\(String(describing: error))")
         }
         
         

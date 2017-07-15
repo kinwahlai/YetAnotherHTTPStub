@@ -8,6 +8,19 @@
 
 import Foundation
 
+public func getThreadName() -> String {
+    if Thread.current.isMainThread {
+        return "Main Thread"
+    } else if let name = Thread.current.name {
+        if name == "" {
+            return "Anonymous Thread"
+        }
+        return name
+    } else {
+        return "Unknown Thread"
+    }
+}
+
 public class YetAnotherURLProtocol: URLProtocol {
     public class func stubHTTP(_ addSessionToXCTestObservationCenter: Bool = true, _ sessionBlock: (StubSession)->()) {
         let session = StubSessionManager.sharedSession()

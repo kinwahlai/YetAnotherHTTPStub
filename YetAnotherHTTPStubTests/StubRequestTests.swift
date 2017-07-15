@@ -41,7 +41,8 @@ class StubRequestTests: XCTestCase {
 
     func testRequestHasMultipleStubResponse() {
         let stubRequest = StubRequest(trueMatcher)
-        stubRequest.thenResponse(responseBuilder: http(200, headers: [:], content: .noContent))
+        stubRequest
+            .thenResponse(responseBuilder: http(200, headers: [:], content: .noContent))
             .thenResponse(responseBuilder: http(404, headers: [:], content: .noContent))
         
         XCTAssertEqual(stubRequest.responses.count, 2)

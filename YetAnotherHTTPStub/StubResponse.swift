@@ -46,9 +46,11 @@ public func ==(lhs:StubContent, rhs:StubContent) -> Bool {
 }
 
 // MARK: - StubResponse
-public enum StubResponse {
+public enum Response {
     case success(response: HTTPURLResponse, content: StubContent)
     case failure(StubError)
 }
 
-public typealias Builder = (URLRequest) -> (StubResponse)
+public typealias Builder = (URLRequest) -> (Response)
+
+
