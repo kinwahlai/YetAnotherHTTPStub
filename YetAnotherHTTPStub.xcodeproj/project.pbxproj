@@ -13,6 +13,8 @@
 		669351D01F141B2C00576163 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 669351CF1F141B2C00576163 /* XCTest.framework */; };
 		66998C361F147FC70032332C /* StubSession+URLSessionConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66998C351F147FC70032332C /* StubSession+URLSessionConfiguration.swift */; };
 		66998C381F1481010032332C /* StubSession+URLSessionConfigurationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66998C371F1481010032332C /* StubSession+URLSessionConfigurationTests.swift */; };
+		66B503DD1F1AE13600EFCA73 /* YetAnotherHTTPStub.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66D34D921F108F520013E89F /* YetAnotherHTTPStub.framework */; };
+		66B503DE1F1AE13B00EFCA73 /* YetAnotherHTTPStub.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 66D34D921F108F520013E89F /* YetAnotherHTTPStub.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		66C64F2A1F13340100ED8B96 /* MatchersTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66C64F291F13340100ED8B96 /* MatchersTests.swift */; };
 		66C64F2C1F13349600ED8B96 /* Matchers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66C64F2B1F13349600ED8B96 /* Matchers.swift */; };
 		66D34D9C1F108F520013E89F /* YetAnotherHTTPStub.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66D34D921F108F520013E89F /* YetAnotherHTTPStub.framework */; };
@@ -32,7 +34,6 @@
 		66EE9A731F1ACE01003264D4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 66EE9A721F1ACE01003264D4 /* Assets.xcassets */; };
 		66EE9A761F1ACE01003264D4 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 66EE9A741F1ACE01003264D4 /* LaunchScreen.storyboard */; };
 		66EE9A811F1ACE02003264D4 /* ExampleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66EE9A801F1ACE02003264D4 /* ExampleTests.swift */; };
-		66EE9A8A1F1ACE37003264D4 /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66EE9A891F1ACE37003264D4 /* Alamofire.framework */; };
 		66EE9A8B1F1ACE3D003264D4 /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66EE9A891F1ACE37003264D4 /* Alamofire.framework */; };
 		66EE9A8C1F1ACE3D003264D4 /* Alamofire.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 66EE9A891F1ACE37003264D4 /* Alamofire.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		66EE9A901F1ACEE8003264D4 /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66EE9A891F1ACE37003264D4 /* Alamofire.framework */; };
@@ -81,6 +82,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				66B503DE1F1AE13B00EFCA73 /* YetAnotherHTTPStub.framework in Embed Frameworks */,
 				66EE9A921F1ACF00003264D4 /* Alamofire.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
@@ -130,7 +132,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				669351D01F141B2C00576163 /* XCTest.framework in Frameworks */,
-				66EE9A8A1F1ACE37003264D4 /* Alamofire.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -154,6 +155,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				66B503DD1F1AE13600EFCA73 /* YetAnotherHTTPStub.framework in Frameworks */,
 				66EE9A901F1ACEE8003264D4 /* Alamofire.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -808,6 +810,7 @@
 				66EE9A841F1ACE02003264D4 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		66EE9A881F1ACE02003264D4 /* Build configuration list for PBXNativeTarget "ExampleTests" */ = {
 			isa = XCConfigurationList;
@@ -816,6 +819,7 @@
 				66EE9A861F1ACE02003264D4 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
