@@ -10,6 +10,14 @@ import Foundation
 import XCTest
 @testable import YetAnotherHTTPStub
 
+class StubRequestUnderTest: StubRequest {
+    var failureResponseCreated: Bool = false
+    override func createFailureResponse(forRequest request: URLRequest) -> StubResponse {
+        failureResponseCreated = true
+        return super.createFailureResponse(forRequest: request)
+    }
+}
+
 class StubRequestTests: XCTestCase {
     var trueMatcher: Matcher!
     var falseMatcher: Matcher!
@@ -50,28 +58,19 @@ class StubRequestTests: XCTestCase {
 
     func testReturnFailureResponseIfDeveloperDidntSetResponse() {
         let httpbin = URLRequest(url: URL(string: "https://www.httpbin.org/")!)
-        let stubRequest = StubRequest(trueMatcher)
-        let response = stubRequest.popResponse(for: httpbin)
-        if case .failure(let error) = response!(httpbin) {
-            XCTAssertEqual(error.localizedDescription, "There isn't any(more) response for this request https://www.httpbin.org/")
-        } else {
-            XCTFail()
-        }
+        let stubRequest = StubRequestUnderTest(trueMatcher)
+        _ = stubRequest.popResponse(for: httpbin)
+        XCTAssertTrue(stubRequest.failureResponseCreated)
     }
     
     func testReturnFailureResponseIfResponseStackBecomeEmpty() {
         let httpbin = URLRequest(url: URL(string: "https://www.httpbin.org/")!)
-        let stubRequest = StubRequest(trueMatcher)
+        let stubRequest = StubRequestUnderTest(trueMatcher)
         stubRequest.thenResponse(responseBuilder: jsonString("hello1"))
-
         _ = stubRequest.popResponse(for: httpbin)
-        let response = stubRequest.popResponse(for: httpbin)
-
-        if case .failure(let error) = response!(httpbin) {
-            XCTAssertEqual(error.localizedDescription, "There isn't any(more) response for this request https://www.httpbin.org/")
-        } else {
-            XCTFail()
-        }
+        XCTAssertFalse(stubRequest.failureResponseCreated)
+        _ = stubRequest.popResponse(for: httpbin)
+        XCTAssertTrue(stubRequest.failureResponseCreated)
     }
 
     func testNoResponsesIfRequestNotMatch() {
@@ -85,19 +84,11 @@ class StubRequestTests: XCTestCase {
     
     func testFirstResponsesIfRequestMatching() {
         let httpbin = URLRequest(url: URL(string: "https://www.httpbin.org/")!)
-        let stubRequest = StubRequest(trueMatcher)
+        let stubRequest = StubRequestUnderTest(trueMatcher)
+        let builder = jsonString("hello")
         stubRequest.thenResponse(responseBuilder: jsonString("hello"))
-        
-        let stubResponse = stubRequest.popResponse(for: httpbin)
-        
-        if case .success(let urlResponse, let content) = stubResponse!(httpbin) {
-            XCTAssertNotNil(urlResponse)
-            XCTAssertEqual(urlResponse.statusCode, 200)
-            XCTAssertEqual(urlResponse.mimeType, "application/json")
-            XCTAssertEqual(urlResponse.textEncodingName, "utf-8")
-            XCTAssertTrue(content == StubContent.data("hello".data(using: String.Encoding.utf8)!))
-        } else {
-            XCTFail()
-        }
+        let response = stubRequest.popResponse(for: httpbin)
+        XCTAssertNotNil(response)
+        XCTAssertFalse(stubRequest.failureResponseCreated)
     }
 }

@@ -12,7 +12,7 @@ public typealias Matcher = (URLRequest) -> (Bool)
 
 public class StubRequest: NSObject {
     internal let matcher: Matcher
-    internal var responses: [Builder]
+    internal var responses: [StubResponse]
     
     internal init(_ matcher: @escaping Matcher) {
         self.matcher = matcher
@@ -21,16 +21,20 @@ public class StubRequest: NSObject {
     
     @discardableResult
     public func thenResponse(responseBuilder: @escaping Builder) -> Self {
-        self.responses.append(responseBuilder)
+        self.responses.append(StubResponse(responseBuilder))
         return self
     }
     
-    internal func popResponse(for request: URLRequest) -> Builder? {
+    internal func popResponse(for request: URLRequest) -> StubResponse? {
         guard matcher(request) == true else { return nil }
         if responses.isEmpty {
-            return failure(StubError("There isn't any(more) response for this request \(request)"))
+            return createFailureResponse(forRequest: request)
         } else {
             return responses.removeFirst()
         }
+    }
+    
+    internal func createFailureResponse(forRequest request: URLRequest) -> StubResponse {
+        return StubResponse(failure(StubError("There isn't any(more) response for this request \(request)")))
     }
 }

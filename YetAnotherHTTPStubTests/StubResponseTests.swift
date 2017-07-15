@@ -102,4 +102,14 @@ class StubResponseTests: XCTestCase {
         XCTAssertEqual(receivedResponse?.textEncodingName, "utf-8")
         XCTAssertTrue(client.clientDidFinishLoading)
     }
+    
+    func testFailureResponse() {
+        let client = URLProtocolClientSpy()
+        var request = URLRequest(url: URL(string: "https://httpbin.org/get")!)
+        request.httpMethod = "GET"
+        let fakeProtocol = FakeURLProtocol(request: request, cachedResponse: nil, client: client)
+        let responseBuilder: Builder = failure(StubError("There isn't any(more) response for this request \(request)"))
+        StubResponse(responseBuilder).reply(via: fakeProtocol)
+        XCTAssertTrue(client.clientDidFailedWithError)
+    }
 }

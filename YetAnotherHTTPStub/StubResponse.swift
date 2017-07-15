@@ -75,4 +75,3 @@ public class StubResponse: NSObject {
         }
     }
 }
-
