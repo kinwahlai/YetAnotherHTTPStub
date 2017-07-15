@@ -1,2 +1,4 @@
 *.xcbkptlist
 xcuserdata
+Carthage/Checkouts
+Carthage/Build
