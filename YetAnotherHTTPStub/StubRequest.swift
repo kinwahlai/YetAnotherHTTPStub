@@ -24,11 +24,11 @@ public class StubRequest: NSObject {
             }
         }
     }
-    internal let matcher: Matcher
-    internal var responses: [StubResponse]
+    let matcher: Matcher
+    var responses: [StubResponse]
     fileprivate let nonPartialResponseChecker: (StubResponse) -> Bool = { response -> Bool in return !response.isPartial }
     
-    internal init(_ matcher: @escaping Matcher) {
+    init(_ matcher: @escaping Matcher) {
         self.matcher = matcher
         self.responses = []
     }
@@ -62,7 +62,7 @@ public class StubRequest: NSObject {
     }
     
     // outgoing
-    internal func popResponse(for request: URLRequest) -> StubResponse? {
+    func popResponse(for request: URLRequest) -> StubResponse? {
         guard matcher(request) == true else { return nil }
         guard !responses.isEmpty else { return createFailureResponse(forType: .exhaustedResponse(request)) }
         if let _ = responses.first(where: nonPartialResponseChecker) {
@@ -72,7 +72,7 @@ public class StubRequest: NSObject {
         }
     }
     
-    internal func createFailureResponse(forType type: ResponseError) -> StubResponse {
+    func createFailureResponse(forType type: ResponseError) -> StubResponse {
         let response = StubResponse().assign(builder: failure(StubError(type.errorMessage())))
         return response
     }

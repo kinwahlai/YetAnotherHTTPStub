@@ -13,9 +13,9 @@ import Foundation
 // 1 macther -> n response builder, operate in sequence
 
 public class StubSession: NSObject {
-    internal var isProtocolRegistered = false
-    internal var uuid: UUID
-    internal var stubRequests: [StubRequest]
+    var isProtocolRegistered = false
+    var uuid: UUID
+    var stubRequests: [StubRequest]
     public var testCaseDidFinishBlock: (()->()) = {}
     
     public var hasRequest: Bool {
@@ -26,7 +26,7 @@ public class StubSession: NSObject {
         return YetAnotherURLProtocol.self
     }
     
-    internal init(uuid: UUID = UUID()) {
+    init(uuid: UUID = UUID()) {
         self.uuid = uuid
         self.stubRequests = []
     }
@@ -50,7 +50,7 @@ public class StubSession: NSObject {
         return stubRequest
     }
     
-    internal func find(by urlRequest: URLRequest) -> StubRequest? {
+    func find(by urlRequest: URLRequest) -> StubRequest? {
         return stubRequests.first { (stub) -> Bool in
             return stub.matcher(urlRequest)
         }
