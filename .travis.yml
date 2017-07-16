@@ -9,12 +9,14 @@ cache:
     - Carthage
 
 before_install:
-  - brew update || brew update
-  - brew install carthage || brew outdated carthage || brew upgrade carthage
+  - brew update
+  - brew outdated carthage || brew upgrade carthage
   - carthage update --platform iOS --cache-builds
 
 env:
   - XCODE_SCHEME=YetAnotherHTTPStub
   - XCODE_SCHEME=Example
 
-script: set -o pipefail && xcodebuild -project YetAnotherHTTPStub.xcodeproj -scheme $XCODE_SCHEME -sdk iphonesimulator -destination "name=iPhone SE" clean build-for-testing test | xcpretty
+script: 
+  - xcodebuild -list -project YetAnotherHTTPStub.xcodeproj
+  - set -o pipefail && xcodebuild -project YetAnotherHTTPStub.xcodeproj -scheme $XCODE_SCHEME -sdk iphonesimulator -destination "name=iPhone SE" clean build-for-testing test | xcpretty
