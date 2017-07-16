@@ -91,7 +91,9 @@ func matcher(request:NSURLRequest) -> StubResponse {
 - `http(status, headers, StubContent)`
 - `jsonString(string, status, headers)`
 - `json(body, status, headers)`
-- `json(data, status, headers)`
+- `json(data, status, headers)` 
+- `fileContent(filePath, status, headers)` - this builder doesnt specific the headers for the mimetype
+- `jsonFile(filePath, status, headers)` - a wrapper of fileContent that set mimetype to application/json and encoding to utf8
 
 ### Queue
 
