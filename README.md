@@ -93,6 +93,21 @@ func matcher(request:NSURLRequest) -> StubResponse {
 - `json(body, status, headers)`
 - `json(data, status, headers)`
 
+### Queue
+
+StubResponse will be replied on a separate DispatchQueue automatically. However, you can specific or switch to use the queue of your choice by using `.responseOn(queue: customQueue)` function.
+Response will use the queue from the last response until queue switch by `responseOn(queue: customQueue)`, and then all the subsequent response will use the new queue.
+
+```swift
+let customQueue = DispatchQueue(label: "custom.queue")
+YetAnotherURLProtocol.stubHTTP { (session) in
+    session.whenRequest(matcher:  http(.get, uri: "/getContact?page=\\d+&per_page=50"))
+    .thenResponse(responseBuilder: jsonString(<Page 1 Response>))
+    .responseOn(queue: customQueue)
+    .thenResponse(responseBuilder: jsonString(<Page 2 Response>))
+}
+```
+
 ## Donation
 
 <table>
