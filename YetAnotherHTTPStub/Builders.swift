@@ -8,21 +8,21 @@
 
 import Foundation
 
-public func failure(_ error: StubError) -> (_ urlrequest: URLRequest) -> StubResponse {
-    return { (_ urlrequest: URLRequest) -> StubResponse in
+public func failure(_ error: StubError) -> (_ urlrequest: URLRequest) -> Response {
+    return { (_ urlrequest: URLRequest) -> Response in
         return .failure(error)
     }
 }
 
-public func http(_ status:Int = 200, headers:[String:String]? = nil, content: StubContent = .noContent) -> (_ urlrequest: URLRequest) -> StubResponse {
-    return { (_ urlrequest: URLRequest) -> StubResponse in
+public func http(_ status:Int = 200, headers:[String:String]? = nil, content: StubContent = .noContent) -> (_ urlrequest: URLRequest) -> Response {
+    return { (_ urlrequest: URLRequest) -> Response in
         let response = HTTPURLResponse(url: urlrequest.url!, statusCode: status, httpVersion: "HTTP/1.1", headerFields: headers)!
         return .success(response: response, content: content)
     }
 }
 
-public func jsonString(_ jsonString: String, status:Int = 200, headers:[String:String]? = nil) -> (_ urlrequest: URLRequest) -> StubResponse {
-    return { (_ urlrequest: URLRequest) -> StubResponse in
+public func jsonString(_ jsonString: String, status:Int = 200, headers:[String:String]? = nil) -> (_ urlrequest: URLRequest) -> Response {
+    return { (_ urlrequest: URLRequest) -> Response in
         if let data = jsonString.data(using: String.Encoding.utf8) {
             return jsonData(data, status: status, headers: headers)(urlrequest)
         } else {
@@ -31,8 +31,8 @@ public func jsonString(_ jsonString: String, status:Int = 200, headers:[String:S
     }
 }
 
-public func json(_ body: Any, status:Int = 200, headers:[String:String]? = nil) -> (_ urlrequest: URLRequest) -> StubResponse {
-    return { (_ urlrequest: URLRequest) -> StubResponse in
+public func json(_ body: Any, status:Int = 200, headers:[String:String]? = nil) -> (_ urlrequest: URLRequest) -> Response {
+    return { (_ urlrequest: URLRequest) -> Response in
         do {
             let data = try JSONSerialization.data(withJSONObject: body, options: JSONSerialization.WritingOptions())
             return jsonData(data, status: status, headers: headers)(urlrequest)
@@ -42,8 +42,8 @@ public func json(_ body: Any, status:Int = 200, headers:[String:String]? = nil) 
     }
 }
 
-public func jsonData(_ data: Data, status:Int = 200, headers:[String:String]? = nil) -> (_ urlrequest: URLRequest) -> StubResponse {
-    return { (_ urlrequest: URLRequest) -> StubResponse in
+public func jsonData(_ data: Data, status:Int = 200, headers:[String:String]? = nil) -> (_ urlrequest: URLRequest) -> Response {
+    return { (_ urlrequest: URLRequest) -> Response in
         var headers = headers ?? [String:String]()
         if headers["Content-Type"] == nil {
             headers["Content-Type"] = "application/json; charset=utf-8"

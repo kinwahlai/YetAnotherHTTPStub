@@ -36,7 +36,7 @@ class StubSessionTests: XCTestCase {
     // 1 session -> n matcher
     func testEachSessionCanHaveMultipleStubRequest() {
         let google = URLRequest(url: URL(string: "https://www.google.com/")!)
-        let httpbin = URLRequest(url: URL(string: "https://www.httpbin.org/")!)
+        _ = URLRequest(url: URL(string: "https://www.httpbin.org/")!)
         
         session.whenRequest { (urlrequest: URLRequest) -> Bool in
             return urlrequest == google

@@ -8,6 +8,19 @@
 
 import Foundation
 
+public func getThreadName() -> String {
+    if Thread.current.isMainThread {
+        return "Main Thread"
+    } else if let name = Thread.current.name {
+        if name == "" {
+            return "Anonymous Thread"
+        }
+        return name
+    } else {
+        return "Unknown Thread"
+    }
+}
+
 public class YetAnotherURLProtocol: URLProtocol {
     public class func stubHTTP(_ addSessionToXCTestObservationCenter: Bool = true, _ sessionBlock: (StubSession)->()) {
         let session = StubSessionManager.sharedSession()
@@ -31,16 +44,7 @@ extension YetAnotherURLProtocol {
     public override func startLoading() {
         guard let stubRequest = StubSessionManager.sharedSession().find(by: request) else { return }
         guard let stubResponse = stubRequest.popResponse(for: request) else { return }
-        if case .success(let urlResponse, let content) = stubResponse(request) {
-            client?.urlProtocol(self, didReceive: urlResponse, cacheStoragePolicy: .notAllowed)
-            if case .data(let data) = content {
-                client?.urlProtocol(self, didLoad: data)
-            }
-            client?.urlProtocolDidFinishLoading(self)
-        }
-        if case .failure(let error) = stubResponse(request) {
-            client?.urlProtocol(self, didFailWithError: error)
-        }
+        stubResponse.reply(via: self)
     }
     
     public override func stopLoading() {
