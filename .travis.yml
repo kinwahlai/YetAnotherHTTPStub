@@ -2,7 +2,19 @@ language: objective-c
 xcode_project: YetAnotherHTTPStub.xcodeproj
 xcode_scheme: YetAnotherHTTPStub
 osx_image: xcode8.3
+
+cache:
+  directories:
+    - build
+    - Carthage
+
+before_install:
+  - brew update || brew update
+  - brew install carthage || brew outdated carthage || brew upgrade carthage
+  - carthage update --platform iOS --cache-builds
+
 env:
   - XCODE_SCHEME=YetAnotherHTTPStub
   - XCODE_SCHEME=Example
-script: xcodebuild test -project YetAnotherHTTPStub.xcodeproj -scheme $XCODE_SCHEME -sdk iphonesimulator -destination "name=iPhone SE"
+
+script: set -o pipefail && xcodebuild -project YetAnotherHTTPStub.xcodeproj -scheme $XCODE_SCHEME -sdk iphonesimulator -destination "name=iPhone SE" clean build-for-testing test | xcpretty
