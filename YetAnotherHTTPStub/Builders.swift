@@ -51,3 +51,24 @@ public func jsonData(_ data: Data, status:Int = 200, headers:[String:String]? = 
         return http(status, headers: headers, content: .data(data))(urlrequest)
     }
 }
+
+public func fileContent(_ url: URL, status:Int = 200, headers:[String:String]? = nil) -> (_ urlrequest: URLRequest) -> Response {
+    return { (_ urlrequest: URLRequest) -> Response in
+        do {
+            let data = try Data(contentsOf: url)
+            return http(status, headers: headers, content: .data(data))(urlrequest)
+        } catch {
+            return .failure(StubError("Reading file content failed"))
+        }
+    }
+}
+
+public func jsonFile(_ url: URL, status:Int = 200, headers:[String:String]? = nil) -> (_ urlrequest: URLRequest) -> Response {
+    return { (_ urlrequest: URLRequest) -> Response in
+        var headers = headers ?? [String:String]()
+        if headers["Content-Type"] == nil {
+            headers["Content-Type"] = "application/json; charset=utf-8"
+        }
+        return fileContent(url, status: status, headers: headers)(urlrequest)
+    }
+}

@@ -11,9 +11,10 @@ import XCTest
 @testable import YetAnotherHTTPStub
 
 class BuildersTests: XCTestCase {
-    
+    var urlrequest: URLRequest!
     override func setUp() {
         super.setUp()
+        urlrequest = URLRequest(url: URL(string: "https://www.httpbin.org/")!)
     }
     
     override func tearDown() {
@@ -21,7 +22,6 @@ class BuildersTests: XCTestCase {
     }
     
     func testBuildDefaultHTTPResponse() {
-        let urlrequest = URLRequest(url: URL(string: "https://www.httpbin.org/")!)
         let response = http()(urlrequest)
         XCTAssertNotNil(response)
         if case .success(let response, _) = response {
@@ -32,7 +32,6 @@ class BuildersTests: XCTestCase {
     }
     
     func testBuildHTTPResponseWith421() {
-        let urlrequest = URLRequest(url: URL(string: "https://www.httpbin.org/")!)
         let response = http(421)(urlrequest)
         XCTAssertNotNil(response)
         if case .success(let response, _) = response {
@@ -44,7 +43,6 @@ class BuildersTests: XCTestCase {
     
     func testBuildFailureResponse() {
         let yaError = StubError("Any Error")
-        let urlrequest = URLRequest(url: URL(string: "https://www.httpbin.org/")!)
         let response = failure(yaError)(urlrequest)
         if case .failure(let error) = response {
             XCTAssertEqual(error, yaError)
@@ -55,7 +53,6 @@ class BuildersTests: XCTestCase {
     
     func testBuildJSONStringResponse() {
         let stringContent = "{\"hello\": \"world\"}"
-        let urlrequest = URLRequest(url: URL(string: "https://www.httpbin.org/")!)
         let response = jsonString(stringContent)(urlrequest)
         XCTAssertNotNil(response)
         if case .success(let response, let content) = response {
@@ -70,7 +67,6 @@ class BuildersTests: XCTestCase {
     
     func testBuildJSONResponse() {
         let stringContent = "{\"hello\":\"world\"}"
-        let urlrequest = URLRequest(url: URL(string: "https://www.httpbin.org/")!)
         let response = json(["hello": "world"])(urlrequest)
         XCTAssertNotNil(response)
         if case .success(let response, let content) = response {
@@ -91,7 +87,6 @@ class BuildersTests: XCTestCase {
     
     func testBuildJSONDataResponse() {
         let jsonBytes = "{\"hello\":\"world\"}".data(using: String.Encoding.utf8)!
-        let urlrequest = URLRequest(url: URL(string: "https://www.httpbin.org/")!)
         let response = jsonData(jsonBytes)(urlrequest)
         XCTAssertNotNil(response)
         if case .success(let response, let content) = response {
@@ -99,6 +94,35 @@ class BuildersTests: XCTestCase {
             XCTAssertEqual(response.mimeType, "application/json")
             XCTAssertEqual(response.textEncodingName, "utf-8")
             XCTAssertEqual(content, StubContent.data(jsonBytes))
+        } else {
+            XCTFail()
+        }
+    }
+    
+    func testBuildResponseWithFileContent() {
+        let filePath: URL = Bundle(for: BuildersTests.self).url(forResource: "GET", withExtension: "json")!
+        let data = try! Data(contentsOf: filePath)
+        let response = fileContent(filePath, status: 200)(urlrequest)
+        XCTAssertNotNil(response)
+        if case .success(let response, let content) = response {
+            XCTAssertEqual(response.statusCode, 200)
+            XCTAssertNil(response.mimeType)
+            XCTAssertEqual(content, StubContent.data(data))
+        } else {
+            XCTFail()
+        }
+    }
+    
+    func testBuildResponseWithJSONFile() {
+        let filePath: URL = Bundle(for: BuildersTests.self).url(forResource: "GET", withExtension: "json")!
+        let data = try! Data(contentsOf: filePath)
+        let response = jsonFile(filePath)(urlrequest)
+        XCTAssertNotNil(response)
+        if case .success(let response, let content) = response {
+            XCTAssertEqual(response.statusCode, 200)
+            XCTAssertEqual(response.mimeType, "application/json")
+            XCTAssertEqual(response.textEncodingName, "utf-8")
+            XCTAssertEqual(content, StubContent.data(data))
         } else {
             XCTFail()
         }

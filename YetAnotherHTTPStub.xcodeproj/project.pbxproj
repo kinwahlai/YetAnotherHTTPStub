@@ -40,6 +40,7 @@
 		66EE9A8C1F1ACE3D003264D4 /* Alamofire.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 66EE9A891F1ACE37003264D4 /* Alamofire.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		66EE9A901F1ACEE8003264D4 /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66EE9A891F1ACE37003264D4 /* Alamofire.framework */; };
 		66EE9A921F1ACF00003264D4 /* Alamofire.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 66EE9A891F1ACE37003264D4 /* Alamofire.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		66F7A51A1F1BDB1500BAE9D4 /* GET.json in Resources */ = {isa = PBXBuildFile; fileRef = 66F7A5191F1BDB1500BAE9D4 /* GET.json */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -128,6 +129,7 @@
 		66EE9A801F1ACE02003264D4 /* ExampleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExampleTests.swift; sourceTree = "<group>"; };
 		66EE9A821F1ACE02003264D4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		66EE9A891F1ACE37003264D4 /* Alamofire.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Alamofire.framework; path = Carthage/Build/iOS/Alamofire.framework; sourceTree = "<group>"; };
+		66F7A5191F1BDB1500BAE9D4 /* GET.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = GET.json; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -220,6 +222,7 @@
 		66D34D9F1F108F520013E89F /* YetAnotherHTTPStubTests */ = {
 			isa = PBXGroup;
 			children = (
+				66F7A5191F1BDB1500BAE9D4 /* GET.json */,
 				66D34DA01F108F520013E89F /* YetAnotherURLProtocolTests.swift */,
 				66D34DA21F108F520013E89F /* Info.plist */,
 				66D34DB31F1173530013E89F /* StubSessionTests.swift */,
@@ -407,6 +410,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				66F7A51A1F1BDB1500BAE9D4 /* GET.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

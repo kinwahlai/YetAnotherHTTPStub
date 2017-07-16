@@ -172,6 +172,28 @@ class ExampleTests: XCTestCase {
         wait(for: [expect1, expect2], timeout: 5)
     }
     
+    func testExampleUsingFileContentBuilder() {
+        guard let filePath: URL = Bundle(for: ExampleTests.self).url(forResource: "GET", withExtension: "json") else { XCTFail(); return }
+        
+        YetAnotherURLProtocol.stubHTTP { (session) in
+            session.whenRequest(matcher: http(.get, uri: "/get"))
+                .thenResponse(responseBuilder: jsonFile(filePath)) // or fileContent
+        }
+        
+        let expect = expectation(description: "")
+        Alamofire.request("https://httpbin.org/get").responseJSON { (response) in
+            XCTAssertTrue(response.result.isSuccess)
+            let dict = response.result.value as? [String: Any]
+            XCTAssertNotNil(dict)
+            let originIp = dict!["origin"] as! String
+            XCTAssertEqual(originIp, "9.9.9.9")
+            expect.fulfill()
+        }
+        waitForExpectations(timeout: 5) { (error) in
+            XCTAssertNil(error)
+        }
+    }
+    
     fileprivate func httpRequest(forURL urlstring: String, closure: @escaping ((DataResponse<Any>) -> Void)) {
         Alamofire.request(urlstring).responseJSON(completionHandler: closure)
     }
