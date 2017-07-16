@@ -10,7 +10,7 @@ import Foundation
 
 // MARK: - Error
 public struct StubError: Error, Equatable {
-    var message: String
+    public var message: String
     var localizedDescription: String {
         return message
     }
@@ -57,6 +57,7 @@ public class StubResponse: NSObject {
     private(set) var builder: Builder?
     private(set) var queue: DispatchQueue
     fileprivate var postReplyClosure: (() -> Void) = { }
+    private(set) var delay: TimeInterval = 0
     
     var isPartial: Bool {
         return builder == nil
@@ -81,10 +82,16 @@ public class StubResponse: NSObject {
         self.postReplyClosure = postReply
         return self
     }
+
+    @discardableResult
+    func setResponseDelay(_ delay: TimeInterval) -> StubResponse {
+        self.delay = delay
+        return self
+    }
     
     public func reply(via urlProtocol: URLProtocol) {
         guard let builder = builder else { return }
-        queue.async {
+        queue.asyncAfter(deadline: DispatchTime.now() + delay) {
             let request = urlProtocol.request
             let response = builder(request)
             let client = urlProtocol.client
