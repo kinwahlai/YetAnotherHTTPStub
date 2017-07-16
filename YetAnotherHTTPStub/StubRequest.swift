@@ -21,7 +21,7 @@ public class StubRequest: NSObject {
     
     @discardableResult
     public func thenResponse(responseBuilder: @escaping Builder) -> Self {
-        self.responses.append(StubResponse(responseBuilder))
+        self.responses.append(StubResponse().assign(builder: responseBuilder))
         return self
     }
     
@@ -35,6 +35,7 @@ public class StubRequest: NSObject {
     }
     
     internal func createFailureResponse(forRequest request: URLRequest) -> StubResponse {
-        return StubResponse(failure(StubError("There isn't any(more) response for this request \(request)")))
+        let response = StubResponse().assign(builder: failure(StubError("There isn't any(more) response for this request \(request)")))
+        return response
     }
 }

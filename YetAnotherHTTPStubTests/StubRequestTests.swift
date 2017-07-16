@@ -81,11 +81,9 @@ class StubRequestTests: XCTestCase {
         XCTAssertNil(response)
     }
     
-    
     func testFirstResponsesIfRequestMatching() {
         let httpbin = URLRequest(url: URL(string: "https://www.httpbin.org/")!)
         let stubRequest = StubRequestUnderTest(trueMatcher)
-        let builder = jsonString("hello")
         stubRequest.thenResponse(responseBuilder: jsonString("hello"))
         let response = stubRequest.popResponse(for: httpbin)
         XCTAssertNotNil(response)

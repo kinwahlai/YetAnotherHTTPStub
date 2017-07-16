@@ -48,10 +48,24 @@ class URLProtocolClientSpy: NSObject, URLProtocolClient {
     public func urlProtocol(_ protocol: URLProtocol, didCancel challenge: URLAuthenticationChallenge) {}
 }
 
+class StubResponseUnderTest: StubResponse {
+    var customQueueSet: Bool = false
+    
+    override init(queue: DispatchQueue?) {
+        self.customQueueSet = true
+        super.init(queue: queue)
+    }
+}
+
 class StubResponseTests: XCTestCase {
+    var client: URLProtocolClientSpy!
+    var request: URLRequest!
     
     override func setUp() {
         super.setUp()
+        client = URLProtocolClientSpy()
+        request = URLRequest(url: URL(string: "https://httpbin.org/")!)
+        request.httpMethod = "GET"
     }
     
     override func tearDown() {
@@ -59,10 +73,18 @@ class StubResponseTests: XCTestCase {
     }
 
     func testErrorResponse() {
-        let client = URLProtocolClientSpy()
         let request = URLRequest(url: URL(string: "https://httpbin.org/")!)
         let fakeProtocol = FakeURLProtocol(request: request, cachedResponse: nil, client: client)
-        StubResponse(http(404)).reply(via: fakeProtocol)
+        let expect = expectation(description: "error")
+        
+        let response = StubResponse().assign(builder: http(404)).setPostReply {
+            expect.fulfill()
+        }
+        response.reply(via: fakeProtocol)
+        
+        waitForExpectations(timeout: 2) { (error) in
+            XCTAssertNil(error)
+        }
         XCTAssertTrue(client.clientDidReceiveResponse)
         XCTAssertFalse(client.clientDidLoadData)
         let receivedResponse = client.response
@@ -72,11 +94,19 @@ class StubResponseTests: XCTestCase {
     }
 
     func testPostResponse() {
-        let client = URLProtocolClientSpy()
         var request = URLRequest(url: URL(string: "https://httpbin.org/post")!)
         request.httpMethod = "POST"
         let fakeProtocol = FakeURLProtocol(request: request, cachedResponse: nil, client: client)
-        StubResponse(http(200)).reply(via: fakeProtocol)
+        let expect = expectation(description: "post")
+        
+        let response = StubResponse().assign(builder: http(200)).setPostReply {
+            expect.fulfill()
+        }
+        response.reply(via: fakeProtocol)
+        
+        waitForExpectations(timeout: 2) { (error) in
+            XCTAssertNil(error)
+        }
         XCTAssertTrue(client.clientDidReceiveResponse)
         XCTAssertFalse(client.clientDidLoadData)
         let receivedResponse = client.response
@@ -86,12 +116,18 @@ class StubResponseTests: XCTestCase {
     }
 
     func testGetResponse() {
-        let client = URLProtocolClientSpy()
-        var request = URLRequest(url: URL(string: "https://httpbin.org/get")!)
-        request.httpMethod = "GET"
         let fakeProtocol = FakeURLProtocol(request: request, cachedResponse: nil, client: client)
         let responseBuilder: Builder = http(200, headers: ["Content-Type": "application/json; charset=utf-8"], content: .data("hello".data(using: String.Encoding.utf8)!))
-        StubResponse(responseBuilder).reply(via: fakeProtocol)
+        let expect = expectation(description: "get")
+        
+        let response = StubResponse().assign(builder: responseBuilder).setPostReply {
+            expect.fulfill()
+        }
+        response.reply(via: fakeProtocol)
+        
+        waitForExpectations(timeout: 2) { (error) in
+            XCTAssertNil(error)
+        }
         XCTAssertTrue(client.clientDidReceiveResponse)
         XCTAssertTrue(client.clientDidLoadData)
         XCTAssertEqual(client.dataLoaded, "hello".data(using: String.Encoding.utf8)!)
@@ -104,12 +140,37 @@ class StubResponseTests: XCTestCase {
     }
     
     func testFailureResponse() {
-        let client = URLProtocolClientSpy()
-        var request = URLRequest(url: URL(string: "https://httpbin.org/get")!)
-        request.httpMethod = "GET"
         let fakeProtocol = FakeURLProtocol(request: request, cachedResponse: nil, client: client)
         let responseBuilder: Builder = failure(StubError("There isn't any(more) response for this request \(request)"))
-        StubResponse(responseBuilder).reply(via: fakeProtocol)
+        let expect = expectation(description: "get")
+        
+        let response = StubResponse().assign(builder: responseBuilder).setPostReply {
+            expect.fulfill()
+        }
+        response.reply(via: fakeProtocol)
+        
+        waitForExpectations(timeout: 2) { (error) in
+            XCTAssertNil(error)
+        }
         XCTAssertTrue(client.clientDidFailedWithError)
+    }
+    
+    func testCreateAPartialResponseWithQueue() {
+        let customQueue = DispatchQueue.global(qos: DispatchQoS.QoSClass.default)
+        let response = StubResponseUnderTest(queue: customQueue)
+        XCTAssertTrue(response.customQueueSet)
+        XCTAssertTrue(response.isPartial)
+    }
+
+    func testPartialResponseWillNotBeProcess() {
+        let fakeProtocol = FakeURLProtocol(request: request, cachedResponse: nil, client: client)
+        
+        let customQueue = DispatchQueue.global(qos: DispatchQoS.QoSClass.default)
+        let response = StubResponseUnderTest(queue: customQueue)
+        
+        response.reply(via: fakeProtocol)
+        
+        XCTAssertFalse(client.clientDidReceiveResponse)
+        XCTAssertFalse(client.clientDidLoadData)
     }
 }

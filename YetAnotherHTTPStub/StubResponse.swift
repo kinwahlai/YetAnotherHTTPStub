@@ -54,24 +54,51 @@ public enum Response {
 public typealias Builder = (URLRequest) -> (Response)
 
 public class StubResponse: NSObject {
-    fileprivate let builder: Builder
-    init(_ builder: @escaping Builder) {
+    private(set) var builder: Builder?
+    private(set) var queue: DispatchQueue
+    fileprivate var postReplyClosure: (() -> Void) = { }
+    
+    var isPartial: Bool {
+        return builder == nil
+    }
+    
+    init(queue: DispatchQueue? = nil) {
+        if let queue = queue {
+            self.queue = queue
+        } else {
+            self.queue = DispatchQueue(label: "kinwahlai.stubresponse.queue")
+        }
+    }
+    
+    @discardableResult
+    func assign(builder: @escaping Builder) -> StubResponse {
         self.builder = builder
+        return self
+    }
+    
+    @discardableResult
+    func setPostReply(_ postReply: @escaping (() -> Void) = {}) -> StubResponse {
+        self.postReplyClosure = postReply
+        return self
     }
     
     public func reply(via urlProtocol: URLProtocol) {
-        let request = urlProtocol.request
-        let response = builder(request)
-        let client = urlProtocol.client
-        switch response {
-        case .success(let urlResponse, let content):
-            client?.urlProtocol(urlProtocol, didReceive: urlResponse, cacheStoragePolicy: URLCache.StoragePolicy.notAllowed)
-            if case .data(let data) = content {
-                client?.urlProtocol(urlProtocol, didLoad: data)
+        guard let builder = builder else { return }
+        queue.async {
+            let request = urlProtocol.request
+            let response = builder(request)
+            let client = urlProtocol.client
+            switch response {
+            case .success(let urlResponse, let content):
+                client?.urlProtocol(urlProtocol, didReceive: urlResponse, cacheStoragePolicy: URLCache.StoragePolicy.notAllowed)
+                if case .data(let data) = content {
+                    client?.urlProtocol(urlProtocol, didLoad: data)
+                }
+                client?.urlProtocolDidFinishLoading(urlProtocol)
+            case .failure(let error):
+                client?.urlProtocol(urlProtocol, didFailWithError: error)
             }
-            client?.urlProtocolDidFinishLoading(urlProtocol)
-        case .failure(let error):
-            client?.urlProtocol(urlProtocol, didFailWithError: error)
+            self.postReplyClosure()
         }
     }
 }
