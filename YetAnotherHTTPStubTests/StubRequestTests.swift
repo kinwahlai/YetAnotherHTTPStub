@@ -13,6 +13,8 @@ import XCTest
 class StubRequestTests: XCTestCase {
     var trueMatcher: Matcher!
     var falseMatcher: Matcher!
+    var httpbin: URLRequest!
+    var customQueue: DispatchQueue!
     override func setUp() {
         super.setUp()
         trueMatcher = { _ in
@@ -21,6 +23,8 @@ class StubRequestTests: XCTestCase {
         falseMatcher = { _ in
             return false
         }
+        httpbin = URLRequest(url: URL(string: "https://www.httpbin.org/")!)
+        customQueue = DispatchQueue(label: "custom.queue")
     }
     
     override func tearDown() {
@@ -49,7 +53,6 @@ class StubRequestTests: XCTestCase {
     }
 
     func testReturnFailureResponseIfDeveloperDidntSetResponse() {
-        let httpbin = URLRequest(url: URL(string: "https://www.httpbin.org/")!)
         let stubRequest = StubRequest(trueMatcher)
         let stubResponse = stubRequest.popResponse(for: httpbin)
         switch stubResponse!.builder!(httpbin) {
@@ -61,7 +64,6 @@ class StubRequestTests: XCTestCase {
     }
     
     func testReturnFailureResponseIfResponseStackBecomeEmpty() {
-        let httpbin = URLRequest(url: URL(string: "https://www.httpbin.org/")!)
         let stubRequest = StubRequest(trueMatcher)
         stubRequest.thenResponse(responseBuilder: jsonString("hello1"))
         _ = stubRequest.popResponse(for: httpbin)
@@ -75,7 +77,6 @@ class StubRequestTests: XCTestCase {
     }
 
     func testNoResponsesIfRequestNotMatch() {
-        let httpbin = URLRequest(url: URL(string: "https://www.httpbin.org/")!)
         let stubRequest = StubRequest(falseMatcher)
         stubRequest.thenResponse(responseBuilder: http(200, headers: [:], content: .noContent))
         let response = stubRequest.popResponse(for: httpbin)
@@ -83,7 +84,6 @@ class StubRequestTests: XCTestCase {
     }
     
     func testFirstResponsesIfRequestMatching() {
-        let httpbin = URLRequest(url: URL(string: "https://www.httpbin.org/")!)
         let stubRequest = StubRequest(trueMatcher)
         stubRequest.thenResponse(responseBuilder: jsonString("hello"))
         let stubResponse = stubRequest.popResponse(for: httpbin)
@@ -96,7 +96,6 @@ class StubRequestTests: XCTestCase {
     }
 
     func testUseFirstResponseQueueUntilSwitchToOtherQueue() {
-        let httpbin = URLRequest(url: URL(string: "https://www.httpbin.org/")!)
         let stubRequest = StubRequest(trueMatcher)
         stubRequest
             .thenResponse(responseBuilder: jsonString("hello"))
@@ -109,8 +108,6 @@ class StubRequestTests: XCTestCase {
     }
 
     func testReturnFailureResponseForPartialResponse() {
-        let customQueue = DispatchQueue(label: "custom.queue")
-        let httpbin = URLRequest(url: URL(string: "https://www.httpbin.org/")!)
         let stubRequest = StubRequest(trueMatcher)
         stubRequest
             .responseOn(queue: customQueue)
@@ -124,8 +121,6 @@ class StubRequestTests: XCTestCase {
     }
     
     func testPartialResponseWillBecomeFullOnceAssignBuilder() {
-        let customQueue = DispatchQueue(label: "custom.queue")
-        let httpbin = URLRequest(url: URL(string: "https://www.httpbin.org/")!)
         let stubRequest = StubRequest(trueMatcher)
         stubRequest
             .responseOn(queue: customQueue)
@@ -133,7 +128,7 @@ class StubRequestTests: XCTestCase {
         let stubResponse = stubRequest.popResponse(for: httpbin)
         XCTAssertNotNil(stubResponse)
         switch stubResponse!.builder!(httpbin) {
-        case .failure(let error):
+        case .failure(_):
             XCTFail()
         case .success(let response, _):
             XCTAssertEqual(response.statusCode, 200)
@@ -142,8 +137,6 @@ class StubRequestTests: XCTestCase {
     }
     
     func testUseLastQueueUntilItSwitch() {
-        let customQueue = DispatchQueue(label: "custom.queue")
-        let httpbin = URLRequest(url: URL(string: "https://www.httpbin.org/")!)
         let stubRequest = StubRequest(trueMatcher)
         stubRequest
             .thenResponse(responseBuilder: jsonString("hello"))
@@ -168,5 +161,21 @@ class StubRequestTests: XCTestCase {
         XCTAssertEqual(response3?.queue, response4?.queue)
         XCTAssertEqual(response3?.queue.label, "custom.queue")
         XCTAssertEqual(response3?.queue, customQueue)
+    }
+    
+    func testDefaultDelayIsZero() {
+        let stubRequest = StubRequest(trueMatcher)
+        stubRequest
+            .thenResponse(responseBuilder: jsonString("hello"))
+        let response1 = stubRequest.popResponse(for: httpbin)
+        XCTAssertEqual(response1?.delay, 0)
+    }
+
+    func testSetDelayForTheResponse() {
+        let stubRequest = StubRequest(trueMatcher)
+        stubRequest
+            .thenResponse(withDelay: 5, responseBuilder: jsonString("hello"))
+        let response1 = stubRequest.popResponse(for: httpbin)
+        XCTAssertEqual(response1?.delay, 5)
     }
 }

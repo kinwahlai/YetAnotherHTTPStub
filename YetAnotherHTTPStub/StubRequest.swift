@@ -34,16 +34,22 @@ public class StubRequest: NSObject {
     }
     
     @discardableResult
-    public func thenResponse(responseBuilder: @escaping Builder) -> Self {
+    public func thenResponse(withDelay delay: TimeInterval = 0, responseBuilder: @escaping Builder) -> Self {
         guard let lastResponse = responses.last else {
-            responses.append(StubResponse().assign(builder: responseBuilder))
+            responses.append(StubResponse()
+                .setResponseDelay(delay)
+                .assign(builder: responseBuilder))
             return self
         }
         if lastResponse.isPartial {
             let index = responses.count - 1
-            responses[index] = lastResponse.assign(builder: responseBuilder)
+            responses[index] = lastResponse
+                .setResponseDelay(delay)
+                .assign(builder: responseBuilder)
         } else {
-            responses.append(StubResponse(queue: lastResponse.queue).assign(builder: responseBuilder))
+            responses.append(StubResponse(queue: lastResponse.queue)
+                .setResponseDelay(delay)
+                .assign(builder: responseBuilder))
         }
         
         return self

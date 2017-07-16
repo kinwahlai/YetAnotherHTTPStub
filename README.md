@@ -108,6 +108,18 @@ YetAnotherURLProtocol.stubHTTP { (session) in
 }
 ```
 
+You can also delay the reply of StubResponse now. The delay value will only apply to the StubResponse that you specify.
+
+```swift
+let delay: TimeInterval = 5
+YetAnotherURLProtocol.stubHTTP { (session) in
+    session.whenRequest(matcher:  http(.get, uri: "/status"))
+    .thenResponse(withDelay: delay, responseBuilder: jsonString("{\"status\": 1}", status: 200))
+}
+```
+
+##### Checkout the test in Example target for more detail.
+
 ## Donation
 
 <table>

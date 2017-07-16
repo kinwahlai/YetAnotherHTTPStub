@@ -173,4 +173,29 @@ class StubResponseTests: XCTestCase {
         XCTAssertFalse(client.clientDidReceiveResponse)
         XCTAssertFalse(client.clientDidLoadData)
     }
+    
+    func testSetDelayToStubResponse() {
+        XCTAssertEqual(StubResponse().setResponseDelay(5).delay, 5)
+    }
+    
+    func testGetResponseAfterDelay() {
+        let delay: TimeInterval = 5
+        let fakeProtocol = FakeURLProtocol(request: request, cachedResponse: nil, client: client)
+        let expect = expectation(description: "get")
+        
+        let response = StubResponse().setResponseDelay(delay).assign(builder: http(200)).setPostReply {
+            expect.fulfill()
+        }
+        response.reply(via: fakeProtocol)
+        
+        waitForExpectations(timeout: delay + 1) { (error) in
+            XCTAssertNil(error)
+        }
+        XCTAssertTrue(client.clientDidReceiveResponse)
+        XCTAssertFalse(client.clientDidLoadData)
+        let receivedResponse = client.response
+        XCTAssertNotNil(receivedResponse)
+        XCTAssertEqual(receivedResponse?.statusCode, 200)
+        XCTAssertTrue(client.clientDidFinishLoading)
+    }
 }
