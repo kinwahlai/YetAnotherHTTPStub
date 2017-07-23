@@ -9,6 +9,11 @@
 import Foundation
 
 public class ResponseStore {
+    enum InsertType {
+        case append
+        case replace(Int)
+    }
+    
     enum ResponseError {
         case exhaustedResponse(URLRequest)
         case partialResponse(URLRequest)
@@ -41,8 +46,11 @@ public class ResponseStore {
     
     func popResponse(for request: URLRequest) -> StubResponse {
         guard !responses.isEmpty else { return createFailureResponse(forType: .exhaustedResponse(request)) }
-        if let _ = responses.first(where: nonPartialResponseChecker) {
-            return responses.removeFirst()
+        if let response = responses.first(where: nonPartialResponseChecker) {
+            if response.setRepeatable(response.repeatCount - 1).repeatCount <= 0 {
+                responses.removeFirst()
+            }
+            return response
         }else {
             return createFailureResponse(forType: .partialResponse(request))
         }
@@ -54,26 +62,39 @@ public class ResponseStore {
     }
 
     func addResponse(queue: DispatchQueue) {
-        responses.append(StubResponse(queue: queue))
+        insert(StubResponse(queue: queue), to: .append)
     }
     
-    func addResponse(withDelay delay: TimeInterval = 0, responseBuilder: @escaping Builder) {
+    func addResponse(withDelay delay: TimeInterval = 0, repeat count: Int = 1, responseBuilder: @escaping Builder) {
         guard let lastResponse = responses.last else {
-            responses.append(StubResponse()
+            insert(StubResponse()
                 .setResponseDelay(delay)
-                .assign(builder: responseBuilder))
+                .setRepeatable(count)
+                .assign(builder: responseBuilder), to: .append)
             return
         }
         if lastResponse.isPartial {
             let index = responses.count - 1
-            responses[index] = lastResponse
+            insert(lastResponse
                 .setResponseDelay(delay)
-                .assign(builder: responseBuilder)
+                .setRepeatable(count)
+                .assign(builder: responseBuilder), to: .replace(index))
         } else {
-            responses.append(StubResponse(queue: lastResponse.queue)
+            insert(StubResponse(queue: lastResponse.queue)
                 .setResponseDelay(delay)
-                .assign(builder: responseBuilder))
+                .setRepeatable(count)
+                .assign(builder: responseBuilder), to: .append)
         }
     }
-
+    
+    fileprivate func insert(_ response: StubResponse, to type:InsertType) {
+        switch type {
+        case .append:
+            responses.append(response)
+            break;
+        case .replace(let idx):
+            responses[idx] = response
+            break;
+        }
+    }
 }

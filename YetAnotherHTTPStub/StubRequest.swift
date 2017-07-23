@@ -20,8 +20,8 @@ public class StubRequest: NSObject {
     }
     
     @discardableResult
-    public func thenResponse(withDelay delay: TimeInterval = 0, responseBuilder: @escaping Builder) -> Self {
-        responseStore.addResponse(withDelay: delay, responseBuilder: responseBuilder)
+    public func thenResponse(withDelay delay: TimeInterval = 0, repeat count: Int = 1, responseBuilder: @escaping Builder) -> Self {
+        responseStore.addResponse(withDelay: delay, repeat: count, responseBuilder: responseBuilder)
         return self
     }
     

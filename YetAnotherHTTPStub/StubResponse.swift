@@ -21,6 +21,7 @@ public class StubResponse: NSObject {
     private(set) var queue: DispatchQueue
     fileprivate var postReplyClosure: (() -> Void) = { }
     private(set) var delay: TimeInterval = 0
+    private(set) var repeatCount: Int = 1
     
     var isPartial: Bool {
         return builder == nil
@@ -42,13 +43,19 @@ public class StubResponse: NSObject {
     
     @discardableResult
     func setPostReply(_ postReply: @escaping (() -> Void) = {}) -> StubResponse {
-        self.postReplyClosure = postReply
+        postReplyClosure = postReply
         return self
     }
 
     @discardableResult
     func setResponseDelay(_ delay: TimeInterval) -> StubResponse {
         self.delay = delay
+        return self
+    }
+    
+    @discardableResult
+    func setRepeatable(_ count: Int) -> StubResponse {
+        repeatCount = count
         return self
     }
     

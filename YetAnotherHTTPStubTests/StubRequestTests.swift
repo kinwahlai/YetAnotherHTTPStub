@@ -177,4 +177,14 @@ class StubRequestTests: XCTestCase {
         let response1 = stubRequest.popResponse(for: httpbin)
         XCTAssertEqual(response1?.delay, 5)
     }
+    
+    func testSetRepeatableForTheResponse() {
+        let stubRequest = StubRequest(trueMatcher)
+        stubRequest
+            .thenResponse(withDelay: 0, repeat: 2, responseBuilder: jsonString("hello"))
+        let response1 = stubRequest.popResponse(for: httpbin)
+        XCTAssertEqual(response1?.repeatCount, 1)
+        let response2 = stubRequest.popResponse(for: httpbin)
+        XCTAssertEqual(response2?.repeatCount, 0)
+    }
 }

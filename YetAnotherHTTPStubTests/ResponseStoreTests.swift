@@ -73,4 +73,28 @@ class ResponseStoreTests: XCTestCase {
             XCTAssertEqual(stubResponse.delay, delay)
         }
     }
+    
+    func testAddRepeatableResponseToStore() {
+        let delay: TimeInterval = 0
+        let store = ResponseStore()
+        store.addResponse(withDelay: delay, repeat: 3, responseBuilder: http())
+        _ = store.popResponse(for: httpbin)
+        _ = store.popResponse(for: httpbin)
+        let stubResponse = store.popResponse(for: httpbin)
+        switch stubResponse.builder!(httpbin) {
+        case .failure(_):
+            XCTFail()
+        case .success(let response, _):
+            XCTAssertEqual(response.statusCode, 200)
+        }
+        
+        // become failure due to no more reponse
+        let failure = store.popResponse(for: httpbin)
+        switch failure.builder!(httpbin) {
+        case .failure(let error):
+            XCTAssertEqual(error.message, "There isn't any(more) response for this request https://www.httpbin.org/")
+        case .success(_, _):
+            XCTFail()
+        }
+    }
 }

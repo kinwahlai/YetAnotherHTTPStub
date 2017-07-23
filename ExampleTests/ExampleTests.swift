@@ -194,6 +194,41 @@ class ExampleTests: XCTestCase {
         }
     }
     
+    func testRepeatableResponseExample() {
+        let expect1 = expectation(description: "1")
+        let expect2 = expectation(description: "2")
+        let expect3 = expectation(description: "3")
+        
+        YetAnotherURLProtocol.stubHTTP { (session) in
+            session.whenRequest(matcher: http(.get, uri: "/polling"))
+                .thenResponse(repeat: 2, responseBuilder: jsonString("{\"status\": 0}", status: 200))
+                .thenResponse(responseBuilder: jsonString("{\"status\": 1}", status: 200))
+        }
+        
+        let response3: (DataResponse<Any>) -> Void = { (response) in
+            XCTAssertTrue(response.result.isSuccess)
+            XCTAssertFalse(response.result.isFailure)
+            let dict = response.result.value as! [String: Int]
+            XCTAssertEqual(dict["status"], 1)
+            expect3.fulfill()
+        }
+        let response2: (DataResponse<Any>) -> Void = { [response3] (response) in
+            XCTAssertTrue(response.result.isSuccess)
+            XCTAssertFalse(response.result.isFailure)
+            expect2.fulfill()
+            self.httpRequest(forURL: "https://httpbin.org/polling", closure: response3)
+        }
+        let response1: (DataResponse<Any>) -> Void = { [response2] (response) in
+            XCTAssertTrue(response.result.isSuccess)
+            XCTAssertFalse(response.result.isFailure)
+            expect1.fulfill()
+            self.httpRequest(forURL: "https://httpbin.org/polling", closure: response2)
+        }
+        httpRequest(forURL: "https://httpbin.org/polling", closure: response1)
+        
+        wait(for: [expect1, expect2, expect3], timeout: 5)
+    }
+    
     fileprivate func httpRequest(forURL urlstring: String, closure: @escaping ((DataResponse<Any>) -> Void)) {
         Alamofire.request(urlstring).responseJSON(completionHandler: closure)
     }
