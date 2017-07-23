@@ -10,9 +10,10 @@ import XCTest
 @testable import YetAnotherHTTPStub
 
 class ResponseStoreTests: XCTestCase {
-    
+    var httpbin: URLRequest!
     override func setUp() {
         super.setUp()
+        httpbin = URLRequest(url: URL(string: "https://www.httpbin.org/")!)
     }
     
     override func tearDown() {
@@ -26,7 +27,6 @@ class ResponseStoreTests: XCTestCase {
     }
     
     func testStoreReturnFailureResponseIfEmpty() {
-        let httpbin = URLRequest(url: URL(string: "https://www.httpbin.org/")!)
         let store = ResponseStore()
         let stubResponse = store.popResponse(for: httpbin)
         switch stubResponse.builder!(httpbin) {
@@ -38,7 +38,6 @@ class ResponseStoreTests: XCTestCase {
     }
 
     func testStoreReturnFailureResponseIfFirstResponseFoundIsPartial() {
-        let httpbin = URLRequest(url: URL(string: "https://www.httpbin.org/")!)
         let partialResponse = StubResponse()
         let store = ResponseStore([partialResponse])
         let stubResponse = store.popResponse(for: httpbin)
@@ -51,10 +50,27 @@ class ResponseStoreTests: XCTestCase {
     }
     
     func testStoreReturnFirstResponse() {
-        let httpbin = URLRequest(url: URL(string: "https://www.httpbin.org/")!)
         let response = StubResponse().assign(builder: http())
         let store = ResponseStore([response])
         let stubResponse = store.popResponse(for: httpbin)
         XCTAssertEqual(stubResponse, response)
+    }
+
+    func testAddResponseToStore() {
+        let delay: TimeInterval = 5
+        let customQueue = DispatchQueue(label: "custom.queue")
+        let store = ResponseStore()
+        store.addResponse(queue: customQueue)
+        store.addResponse(withDelay: delay, responseBuilder: http())
+        
+        let stubResponse = store.popResponse(for: httpbin)
+        switch stubResponse.builder!(httpbin) {
+        case .failure(_):
+            XCTFail()
+        case .success(let response, _):
+            XCTAssertEqual(response.statusCode, 200)
+            XCTAssertEqual(stubResponse.queue, customQueue)
+            XCTAssertEqual(stubResponse.delay, delay)
+        }
     }
 }

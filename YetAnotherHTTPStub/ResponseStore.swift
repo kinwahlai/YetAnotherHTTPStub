@@ -22,9 +22,10 @@ public class ResponseStore {
             }
         }
     }
+    
     fileprivate let nonPartialResponseChecker: (StubResponse) -> Bool = { response -> Bool in return !response.isPartial }
     
-    public var responses: [StubResponse]
+    private(set) var responses: [StubResponse]
     
     public var isEmpty: Bool {
         return responses.isEmpty
@@ -33,7 +34,6 @@ public class ResponseStore {
     public var responseCount: Int {
         return responses.count
     }
-    
     
     init(_ responses: [StubResponse] = []) {
         self.responses = responses
@@ -51,6 +51,29 @@ public class ResponseStore {
     func createFailureResponse(forType type: ResponseError) -> StubResponse {
         let response = StubResponse().assign(builder: failure(StubError(type.errorMessage())))
         return response
+    }
+
+    func addResponse(queue: DispatchQueue) {
+        responses.append(StubResponse(queue: queue))
+    }
+    
+    func addResponse(withDelay delay: TimeInterval = 0, responseBuilder: @escaping Builder) {
+        guard let lastResponse = responses.last else {
+            responses.append(StubResponse()
+                .setResponseDelay(delay)
+                .assign(builder: responseBuilder))
+            return
+        }
+        if lastResponse.isPartial {
+            let index = responses.count - 1
+            responses[index] = lastResponse
+                .setResponseDelay(delay)
+                .assign(builder: responseBuilder)
+        } else {
+            responses.append(StubResponse(queue: lastResponse.queue)
+                .setResponseDelay(delay)
+                .assign(builder: responseBuilder))
+        }
     }
 
 }
