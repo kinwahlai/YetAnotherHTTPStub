@@ -15,6 +15,8 @@ class MatchersTests: XCTestCase {
     var invalidRequest: URLRequest!
     var urlWithPathRequest: URLRequest!
     var urlWithQueryRequest: URLRequest!
+    var urlWithBracketsRequest: URLRequest!
+    var urlWithPlusRequest: URLRequest!
     var forInvalidQueryTestRequest: URLRequest!
     override func setUp() {
         super.setUp()
@@ -25,6 +27,10 @@ class MatchersTests: XCTestCase {
         urlWithPathRequest = URLRequest(url: URL(string: "https://www.httpbin.org/user-agent")!)
         urlWithQueryRequest = URLRequest(url: URL(string: "https://www.httpbin.org/get?show_env=1&page=2")!)
         urlWithQueryRequest.httpMethod = "GET"
+        urlWithBracketsRequest = URLRequest(url: URL(string: "https://www.httpbin.org/get?show_env[]=1")!)
+        urlWithBracketsRequest.httpMethod = "GET"
+        urlWithPlusRequest = URLRequest(url: URL(string: "https://www.httpbin.org/get?query+test=1")!)
+        urlWithPlusRequest.httpMethod = "GET"
         forInvalidQueryTestRequest = URLRequest(url: URL(string: "https://www.httpbin.org/get?show_env=1&page=a")!)
     }
     
@@ -94,5 +100,12 @@ class MatchersTests: XCTestCase {
 
     func testMethodWithPathAndWildcardMismatch() {
         XCTAssertFalse(http(.patch, uri: "/get?show_env=\\d&page=\\d")(urlWithQueryRequest))
+    }
+    // special characters
+    func testMethodWithBracketCharacters() {
+        XCTAssertTrue(http(.get, uri: "/get?show_env[]=1")(urlWithBracketsRequest))
+    }
+    func testMethodWithPlusSign() {
+        XCTAssertTrue(http(.get, uri: "/get?query+test=1")(urlWithPlusRequest))
     }
 }

@@ -21,7 +21,17 @@ public func uri(_ uri:String) -> (_ urlrequest: URLRequest) -> Bool {
         guard let urlstring = urlrequest.url?.absoluteString, let _ = urlrequest.url?.path else {
             return false
         }
-        let predicate = NSPredicate(format: "SELF MATCHES %@", uri.replacingOccurrences(of: "?", with: "\\?"))
+        guard var encodedUri = uri.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed) else {
+            return false
+        }
+        //restore wildcard backslashes that were encoded
+        encodedUri = encodedUri.replacingOccurrences(of: "%5C", with: "\\")
+
+        //escape regex characters
+        encodedUri = encodedUri.replacingOccurrences(of: "?", with: "\\?")
+        encodedUri = encodedUri.replacingOccurrences(of: "+", with: "\\+")
+        
+        let predicate = NSPredicate(format: "SELF MATCHES %@", encodedUri)
 
         if predicate.evaluate(with: urlstring) { return true }
         
