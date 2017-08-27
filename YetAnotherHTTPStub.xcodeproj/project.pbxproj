@@ -43,6 +43,7 @@
 		66EE9A761F1ACE01003264D4 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 66EE9A741F1ACE01003264D4 /* LaunchScreen.storyboard */; };
 		66EE9A811F1ACE02003264D4 /* ExampleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66EE9A801F1ACE02003264D4 /* ExampleTests.swift */; };
 		66F7A51A1F1BDB1500BAE9D4 /* GET.json in Resources */ = {isa = PBXBuildFile; fileRef = 66F7A5191F1BDB1500BAE9D4 /* GET.json */; };
+		66FC4EC51F53569C003B8258 /* StubResponse+Parameter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66FC4EC41F53569C003B8258 /* StubResponse+Parameter.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -135,6 +136,7 @@
 		66EE9A801F1ACE02003264D4 /* ExampleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExampleTests.swift; sourceTree = "<group>"; };
 		66EE9A821F1ACE02003264D4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		66F7A5191F1BDB1500BAE9D4 /* GET.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = GET.json; sourceTree = "<group>"; };
+		66FC4EC41F53569C003B8258 /* StubResponse+Parameter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "StubResponse+Parameter.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -222,6 +224,7 @@
 				66A866111F24B01700B930DE /* StubContent.swift */,
 				66A866131F24B05A00B930DE /* StubError.swift */,
 				66A866151F24B16700B930DE /* ResponseStore.swift */,
+				66FC4EC41F53569C003B8258 /* StubResponse+Parameter.swift */,
 			);
 			path = YetAnotherHTTPStub;
 			sourceTree = "<group>";
@@ -453,6 +456,7 @@
 				66D34DB01F109DEA0013E89F /* YetAnotherURLProtocol.swift in Sources */,
 				66A866121F24B01700B930DE /* StubContent.swift in Sources */,
 				667C0C561F13EFEA005B4712 /* Builders.swift in Sources */,
+				66FC4EC51F53569C003B8258 /* StubResponse+Parameter.swift in Sources */,
 				66998C361F147FC70032332C /* StubSession+URLSessionConfiguration.swift in Sources */,
 				66D34DB61F1177550013E89F /* StubRequest.swift in Sources */,
 				66D34DBC1F1187CD0013E89F /* StubResponse.swift in Sources */,

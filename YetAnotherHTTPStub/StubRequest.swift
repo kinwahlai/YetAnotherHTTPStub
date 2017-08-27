@@ -9,6 +9,7 @@
 import Foundation
 
 public typealias Matcher = (URLRequest) -> (Bool)
+public typealias ParameterConfiguration = (StubResponse.Parameter) -> Void
 
 public class StubRequest: NSObject {
     let matcher: Matcher
@@ -19,10 +20,28 @@ public class StubRequest: NSObject {
         self.responseStore = ResponseStore()
     }
     
+    // to be deprecated in next version
     @discardableResult
     public func thenResponse(withDelay delay: TimeInterval = 0, repeat count: Int = 1, responseBuilder: @escaping Builder) -> Self {
-        responseStore.addResponse(withDelay: delay, repeat: count, responseBuilder: responseBuilder)
+        let param: StubResponse.Parameter = StubResponse.Parameter()
+                                            .setResponseDelay(delay)
+                                            .setRepeatable(count)
+                                            .setPostReply({})
+                                            .setBuilder(builder: responseBuilder)
+        addResponse(param)
         return self
+    }
+
+    @discardableResult
+    public func thenResponse(configurator: ParameterConfiguration ) -> Self {
+        let param: StubResponse.Parameter = StubResponse.Parameter()
+        configurator(param)
+        addResponse(param)
+        return self
+    }
+    
+    private func addResponse(_ parameter: StubResponse.Parameter) {
+        responseStore.addResponse(with: parameter)
     }
     
     @discardableResult

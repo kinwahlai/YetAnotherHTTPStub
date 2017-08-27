@@ -36,27 +36,18 @@ public class StubResponse: NSObject {
     }
     
     @discardableResult
-    func assign(builder: @escaping Builder) -> StubResponse {
-        self.builder = builder
+    func setup(with parameter: StubResponse.Parameter) -> StubResponse {
+        delay = parameter.delay
+        repeatCount = parameter.repeatCount
+        postReplyClosure = parameter.postReplyClosure
+        builder = parameter.builder
         return self
     }
     
-    @discardableResult
-    func setPostReply(_ postReply: @escaping (() -> Void) = {}) -> StubResponse {
-        postReplyClosure = postReply
-        return self
-    }
-
-    @discardableResult
-    func setResponseDelay(_ delay: TimeInterval) -> StubResponse {
-        self.delay = delay
-        return self
-    }
-    
-    @discardableResult
-    func setRepeatable(_ count: Int) -> StubResponse {
-        repeatCount = count
-        return self
+    // Deduct 1 from repeatCount and return the count value
+    public func deductRepeatCount() -> Int {
+        repeatCount -= 1
+        return repeatCount
     }
     
     public func reply(via urlProtocol: URLProtocol) {

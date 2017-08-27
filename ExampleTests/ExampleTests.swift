@@ -229,6 +229,31 @@ class ExampleTests: XCTestCase {
         wait(for: [expect1, expect2, expect3], timeout: 5)
     }
     
+    func testGetNotifyAfterStubResponseReplied() {
+        var gotNotify: String? = nil
+        
+        YetAnotherURLProtocol.stubHTTP { (session) in
+            session.whenRequest(matcher: http(.get, uri: "/get"))
+                .thenResponse(configurator: { (param) in
+                    param.setResponseDelay(2)
+                        .setBuilder(builder: jsonString("{\"hello\":\"world\"}", status: 200))
+                        .setPostReply {
+                            gotNotify = "post reply notification"
+                        }
+                })
+        }
+        
+        let expect = expectation(description: "")
+        Alamofire.request("https://httpbin.org/get").responseJSON { (response) in
+            expect.fulfill()
+        }
+        waitForExpectations(timeout: 5) { (error) in
+            XCTAssertNil(error)
+        }
+        
+        XCTAssertEqual(gotNotify, "post reply notification")
+    }
+    
     fileprivate func httpRequest(forURL urlstring: String, closure: @escaping ((DataResponse<Any>) -> Void)) {
         Alamofire.request(urlstring).responseJSON(completionHandler: closure)
     }

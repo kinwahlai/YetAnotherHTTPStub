@@ -50,7 +50,8 @@ class ResponseStoreTests: XCTestCase {
     }
     
     func testStoreReturnFirstResponse() {
-        let response = StubResponse().assign(builder: http())
+        let param = StubResponse.Parameter()
+        let response = StubResponse().setup(with: param)
         let store = ResponseStore([response])
         let stubResponse = store.popResponse(for: httpbin)
         XCTAssertEqual(stubResponse, response)
@@ -59,9 +60,13 @@ class ResponseStoreTests: XCTestCase {
     func testAddResponseToStore() {
         let delay: TimeInterval = 5
         let customQueue = DispatchQueue(label: "custom.queue")
+        let param = StubResponse.Parameter()
+                    .setResponseDelay(delay)
+                    .setBuilder(builder: http())
+        
         let store = ResponseStore()
         store.addResponse(queue: customQueue)
-        store.addResponse(withDelay: delay, responseBuilder: http())
+        store.addResponse(with: param)
         
         let stubResponse = store.popResponse(for: httpbin)
         switch stubResponse.builder!(httpbin) {
@@ -76,8 +81,13 @@ class ResponseStoreTests: XCTestCase {
     
     func testAddRepeatableResponseToStore() {
         let delay: TimeInterval = 0
+        let param = StubResponse.Parameter()
+                    .setResponseDelay(delay)
+                    .setRepeatable(3)
+                    .setBuilder(builder: http())
+        
         let store = ResponseStore()
-        store.addResponse(withDelay: delay, repeat: 3, responseBuilder: http())
+        store.addResponse(with: param)
         _ = store.popResponse(for: httpbin)
         _ = store.popResponse(for: httpbin)
         let stubResponse = store.popResponse(for: httpbin)
