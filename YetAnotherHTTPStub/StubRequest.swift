@@ -20,6 +20,7 @@ public class StubRequest: NSObject {
         self.responseStore = ResponseStore()
     }
     
+    // to be deprecated in next version
     @discardableResult
     public func thenResponse(withDelay delay: TimeInterval = 0, repeat count: Int = 1, responseBuilder: @escaping Builder) -> Self {
         let param: StubResponse.Parameter = StubResponse.Parameter()

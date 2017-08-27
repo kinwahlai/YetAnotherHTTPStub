@@ -47,7 +47,7 @@ public class ResponseStore {
     func popResponse(for request: URLRequest) -> StubResponse {
         guard !responses.isEmpty else { return createFailureResponse(forType: .exhaustedResponse(request)) }
         if let response = responses.first(where: nonPartialResponseChecker) {
-            if response.setRepeatable(response.repeatCount - 1).repeatCount <= 0 {
+            if response.deductRepeatCount() <= 0 {
                 responses.removeFirst()
             }
             return response
@@ -57,7 +57,8 @@ public class ResponseStore {
     }
 
     func createFailureResponse(forType type: ResponseError) -> StubResponse {
-        let response = StubResponse().assign(builder: failure(StubError(type.errorMessage())))
+        let param = StubResponse.Parameter().setBuilder(builder: failure(StubError(type.errorMessage())))
+        let response = StubResponse().setup(with: param)
         return response
     }
 
@@ -66,31 +67,15 @@ public class ResponseStore {
     }
     
     func addResponse(with parameter: StubResponse.Parameter) {
-        addResponse(withDelay: parameter.delay, repeat: parameter.repeatCount, postReplyNotify: parameter.postReplyClosure, responseBuilder: parameter.builder)
-    }
-    
-    func addResponse(withDelay delay: TimeInterval, repeat count: Int, postReplyNotify: @escaping (()->Void),responseBuilder: @escaping Builder) {
         guard let lastResponse = responses.last else {
-            insert(StubResponse()
-                .setResponseDelay(delay)
-                .setRepeatable(count)
-                .setPostReply(postReplyNotify)
-                .assign(builder: responseBuilder), to: .append)
+            insert(StubResponse().setup(with: parameter), to: .append)
             return
         }
         if lastResponse.isPartial {
             let index = responses.count - 1
-            insert(lastResponse
-                .setResponseDelay(delay)
-                .setRepeatable(count)
-                .setPostReply(postReplyNotify)
-                .assign(builder: responseBuilder), to: .replace(index))
+            insert(lastResponse.setup(with: parameter), to: .replace(index))
         } else {
-            insert(StubResponse(queue: lastResponse.queue)
-                .setResponseDelay(delay)
-                .setRepeatable(count)
-                .setPostReply(postReplyNotify)
-                .assign(builder: responseBuilder), to: .append)
+            insert(StubResponse(queue: lastResponse.queue).setup(with: parameter), to: .append)
         }
     }
     

@@ -76,10 +76,13 @@ class StubResponseTests: XCTestCase {
         let request = URLRequest(url: URL(string: "https://httpbin.org/")!)
         let fakeProtocol = FakeURLProtocol(request: request, cachedResponse: nil, client: client)
         let expect = expectation(description: "error")
-        
-        let response = StubResponse().assign(builder: http(404)).setPostReply {
-            expect.fulfill()
-        }
+        let param = StubResponse.Parameter()
+                    .setBuilder(builder: http(404))
+                    .setPostReply {
+                        expect.fulfill()
+                    }
+
+        let response = StubResponse().setup(with: param)
         response.reply(via: fakeProtocol)
         
         waitForExpectations(timeout: 2) { (error) in
@@ -98,10 +101,13 @@ class StubResponseTests: XCTestCase {
         request.httpMethod = "POST"
         let fakeProtocol = FakeURLProtocol(request: request, cachedResponse: nil, client: client)
         let expect = expectation(description: "post")
+        let param = StubResponse.Parameter()
+                    .setBuilder(builder: http(200))
+                    .setPostReply {
+                        expect.fulfill()
+                    }
         
-        let response = StubResponse().assign(builder: http(200)).setPostReply {
-            expect.fulfill()
-        }
+        let response = StubResponse().setup(with: param)
         response.reply(via: fakeProtocol)
         
         waitForExpectations(timeout: 2) { (error) in
@@ -119,10 +125,13 @@ class StubResponseTests: XCTestCase {
         let fakeProtocol = FakeURLProtocol(request: request, cachedResponse: nil, client: client)
         let responseBuilder: Builder = http(200, headers: ["Content-Type": "application/json; charset=utf-8"], content: .data("hello".data(using: String.Encoding.utf8)!))
         let expect = expectation(description: "get")
+        let param = StubResponse.Parameter()
+                    .setBuilder(builder: responseBuilder)
+                    .setPostReply {
+                        expect.fulfill()
+                    }
         
-        let response = StubResponse().assign(builder: responseBuilder).setPostReply {
-            expect.fulfill()
-        }
+        let response = StubResponse().setup(with: param)
         response.reply(via: fakeProtocol)
         
         waitForExpectations(timeout: 2) { (error) in
@@ -143,10 +152,13 @@ class StubResponseTests: XCTestCase {
         let fakeProtocol = FakeURLProtocol(request: request, cachedResponse: nil, client: client)
         let responseBuilder: Builder = failure(StubError("There isn't any(more) response for this request \(request)"))
         let expect = expectation(description: "get")
+        let param = StubResponse.Parameter()
+                    .setBuilder(builder: responseBuilder)
+                    .setPostReply {
+                        expect.fulfill()
+                    }
         
-        let response = StubResponse().assign(builder: responseBuilder).setPostReply {
-            expect.fulfill()
-        }
+        let response = StubResponse().setup(with: param)
         response.reply(via: fakeProtocol)
         
         waitForExpectations(timeout: 2) { (error) in
@@ -175,17 +187,23 @@ class StubResponseTests: XCTestCase {
     }
     
     func testSetDelayToStubResponse() {
-        XCTAssertEqual(StubResponse().setResponseDelay(5).delay, 5)
+        let param = StubResponse.Parameter()
+                    .setResponseDelay(5)
+        XCTAssertEqual(StubResponse().setup(with: param).delay, 5)
     }
     
     func testGetResponseAfterDelay() {
         let delay: TimeInterval = 5
         let fakeProtocol = FakeURLProtocol(request: request, cachedResponse: nil, client: client)
         let expect = expectation(description: "get")
+        let param = StubResponse.Parameter()
+                    .setResponseDelay(delay)
+                    .setBuilder(builder: http(200))
+                    .setPostReply {
+                        expect.fulfill()
+                    }
         
-        let response = StubResponse().setResponseDelay(delay).assign(builder: http(200)).setPostReply {
-            expect.fulfill()
-        }
+        let response = StubResponse().setup(with: param)
         response.reply(via: fakeProtocol)
         
         waitForExpectations(timeout: delay + 1) { (error) in
@@ -200,6 +218,8 @@ class StubResponseTests: XCTestCase {
     }
     
     func testSetRepeatableToStubResponse() {
-        XCTAssertEqual(StubResponse().setRepeatable(2).repeatCount, 2)
+        let param = StubResponse.Parameter()
+                    .setRepeatable(2)
+        XCTAssertEqual(StubResponse().setup(with: param).repeatCount, 2)
     }
 }
