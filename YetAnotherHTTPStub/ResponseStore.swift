@@ -65,11 +65,12 @@ public class ResponseStore {
         insert(StubResponse(queue: queue), to: .append)
     }
     
-    func addResponse(withDelay delay: TimeInterval = 0, repeat count: Int = 1, responseBuilder: @escaping Builder) {
+    func addResponse(withDelay delay: TimeInterval, repeat count: Int, postReplyNotify: @escaping (()->Void),responseBuilder: @escaping Builder) {
         guard let lastResponse = responses.last else {
             insert(StubResponse()
                 .setResponseDelay(delay)
                 .setRepeatable(count)
+                .setPostReply(postReplyNotify)
                 .assign(builder: responseBuilder), to: .append)
             return
         }
@@ -78,11 +79,13 @@ public class ResponseStore {
             insert(lastResponse
                 .setResponseDelay(delay)
                 .setRepeatable(count)
+                .setPostReply(postReplyNotify)
                 .assign(builder: responseBuilder), to: .replace(index))
         } else {
             insert(StubResponse(queue: lastResponse.queue)
                 .setResponseDelay(delay)
                 .setRepeatable(count)
+                .setPostReply(postReplyNotify)
                 .assign(builder: responseBuilder), to: .append)
         }
     }

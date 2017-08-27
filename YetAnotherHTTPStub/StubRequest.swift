@@ -9,6 +9,7 @@
 import Foundation
 
 public typealias Matcher = (URLRequest) -> (Bool)
+public typealias ParameterConfiguration = (StubResponse.Parameter) -> Void
 
 public class StubRequest: NSObject {
     let matcher: Matcher
@@ -21,7 +22,15 @@ public class StubRequest: NSObject {
     
     @discardableResult
     public func thenResponse(withDelay delay: TimeInterval = 0, repeat count: Int = 1, responseBuilder: @escaping Builder) -> Self {
-        responseStore.addResponse(withDelay: delay, repeat: count, responseBuilder: responseBuilder)
+        responseStore.addResponse(withDelay: delay, repeat: count, postReplyNotify: {}, responseBuilder: responseBuilder)
+        return self
+    }
+
+    @discardableResult
+    public func thenResponse(configurator: ParameterConfiguration ) -> Self {
+        let param: StubResponse.Parameter = StubResponse.Parameter()
+        configurator(param)
+        responseStore.addResponse(withDelay: param.delay, repeat: param.repeatCount, postReplyNotify: param.postReplyClosure, responseBuilder: param.builder)
         return self
     }
     

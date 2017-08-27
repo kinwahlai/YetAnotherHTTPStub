@@ -51,6 +51,19 @@ class StubRequestTests: XCTestCase {
         
         XCTAssertEqual(stubRequest.responseStore.responseCount, 2)
     }
+    
+    func testSetupMultipleStubResponseWithParameter() {
+        let stubRequest = StubRequest(trueMatcher)
+        stubRequest
+            .thenResponse(configurator: { param in
+                param.setBuilder(builder: http(200, headers: [:], content: .noContent))
+            })
+            .thenResponse(configurator: { param in
+                param.setBuilder(builder: http(404, headers: [:], content: .noContent))
+            })
+        
+        XCTAssertEqual(stubRequest.responseStore.responseCount, 2)
+    }
 
     func testReturnFailureResponseIfDeveloperDidntSetResponse() {
         let stubRequest = StubRequest(trueMatcher)
@@ -182,6 +195,20 @@ class StubRequestTests: XCTestCase {
         let stubRequest = StubRequest(trueMatcher)
         stubRequest
             .thenResponse(withDelay: 0, repeat: 2, responseBuilder: jsonString("hello"))
+        let response1 = stubRequest.popResponse(for: httpbin)
+        XCTAssertEqual(response1?.repeatCount, 1)
+        let response2 = stubRequest.popResponse(for: httpbin)
+        XCTAssertEqual(response2?.repeatCount, 0)
+    }
+
+    func testUsingParameterForRepeatable() {
+        let stubRequest = StubRequest(trueMatcher)
+        stubRequest
+            .thenResponse(configurator: { (param) in
+                param.setResponseDelay(0)
+                     .setRepeatable(2)
+                     .setBuilder(builder: jsonString("hello"))
+            })
         let response1 = stubRequest.popResponse(for: httpbin)
         XCTAssertEqual(response1?.repeatCount, 1)
         let response2 = stubRequest.popResponse(for: httpbin)

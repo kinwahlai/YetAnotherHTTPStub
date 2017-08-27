@@ -61,7 +61,7 @@ class ResponseStoreTests: XCTestCase {
         let customQueue = DispatchQueue(label: "custom.queue")
         let store = ResponseStore()
         store.addResponse(queue: customQueue)
-        store.addResponse(withDelay: delay, responseBuilder: http())
+        store.addResponse(withDelay: delay, repeat: 1, postReplyNotify: {}, responseBuilder: http())
         
         let stubResponse = store.popResponse(for: httpbin)
         switch stubResponse.builder!(httpbin) {
@@ -77,7 +77,7 @@ class ResponseStoreTests: XCTestCase {
     func testAddRepeatableResponseToStore() {
         let delay: TimeInterval = 0
         let store = ResponseStore()
-        store.addResponse(withDelay: delay, repeat: 3, responseBuilder: http())
+        store.addResponse(withDelay: delay, repeat: 3, postReplyNotify: {}, responseBuilder: http())
         _ = store.popResponse(for: httpbin)
         _ = store.popResponse(for: httpbin)
         let stubResponse = store.popResponse(for: httpbin)
