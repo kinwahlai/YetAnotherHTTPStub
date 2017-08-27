@@ -66,6 +66,23 @@ YetAnotherURLProtocol.stubHTTP { (session) in
 }
 ```
 
+Now, get notified on response replied by passing a closure to the response
+```swift
+YetAnotherURLProtocol.stubHTTP { (session) in
+    session.whenRequest(matcher: http(.get, uri: "/polling"))
+        .thenResponse(repeat: 2, responseBuilder: jsonString("{\"status\": 0}", status: 200))
+        .thenResponse(configurator: { (param) in
+            param.setResponseDelay(2)
+                .setBuilder(builder: jsonString("{\"status\": 1}", status: 200))
+                .setPostReply {
+                    gotNotify = "post reply notification"
+                }
+        })
+}
+```
+
+__More examples in ExampleTests, so make sure you go check it out__
+
 ### Matcher
 
 A matcher is a pure function that takes a _URLRequest_ and returns a boolean for checking if the stub request matches the request. And built-in matcher to help simplify the work.

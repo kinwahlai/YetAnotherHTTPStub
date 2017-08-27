@@ -14,25 +14,25 @@ extension StubResponse {
         private(set) var postReplyClosure: (()->Void) = { }
         
         @discardableResult
-        func setBuilder(builder: @escaping Builder) -> StubResponse.Parameter {
+        public func setBuilder(builder: @escaping Builder) -> StubResponse.Parameter {
             self.builder = builder
             return self
         }
         
         @discardableResult
-        func setPostReply(_ postReply: @escaping (()->Void)) -> StubResponse.Parameter {
+        public func setPostReply(_ postReply: @escaping (()->Void)) -> StubResponse.Parameter {
             postReplyClosure = postReply
             return self
         }
         
         @discardableResult
-        func setResponseDelay(_ delay: TimeInterval) -> StubResponse.Parameter {
+        public func setResponseDelay(_ delay: TimeInterval) -> StubResponse.Parameter {
             self.delay = delay
             return self
         }
         
         @discardableResult
-        func setRepeatable(_ count: Int) -> StubResponse.Parameter {
+        public func setRepeatable(_ count: Int) -> StubResponse.Parameter {
             repeatCount = count
             return self
         }
