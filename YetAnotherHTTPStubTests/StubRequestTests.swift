@@ -39,8 +39,8 @@ class StubRequestTests: XCTestCase {
     
     func testRequestHasNoStubResponse() {
         let stubRequest = StubRequest(trueMatcher)
-        XCTAssertNotNil(stubRequest.responses)
-        XCTAssertEqual(stubRequest.responses.count, 0)
+        XCTAssertNotNil(stubRequest.responseStore)
+        XCTAssertTrue(stubRequest.responseStore.isEmpty)
     }
 
     func testRequestHasMultipleStubResponse() {
@@ -49,7 +49,7 @@ class StubRequestTests: XCTestCase {
             .thenResponse(responseBuilder: http(200, headers: [:], content: .noContent))
             .thenResponse(responseBuilder: http(404, headers: [:], content: .noContent))
         
-        XCTAssertEqual(stubRequest.responses.count, 2)
+        XCTAssertEqual(stubRequest.responseStore.responseCount, 2)
     }
 
     func testReturnFailureResponseIfDeveloperDidntSetResponse() {
@@ -144,7 +144,6 @@ class StubRequestTests: XCTestCase {
             .responseOn(queue: customQueue)
             .thenResponse(responseBuilder: jsonString("?"))
             .thenResponse(responseBuilder: jsonString("!"))
-        XCTAssertEqual(stubRequest.responses.count, 4)
         let response1 = stubRequest.popResponse(for: httpbin)
         let response2 = stubRequest.popResponse(for: httpbin)
         let response3 = stubRequest.popResponse(for: httpbin)
@@ -177,5 +176,15 @@ class StubRequestTests: XCTestCase {
             .thenResponse(withDelay: 5, responseBuilder: jsonString("hello"))
         let response1 = stubRequest.popResponse(for: httpbin)
         XCTAssertEqual(response1?.delay, 5)
+    }
+    
+    func testSetRepeatableForTheResponse() {
+        let stubRequest = StubRequest(trueMatcher)
+        stubRequest
+            .thenResponse(withDelay: 0, repeat: 2, responseBuilder: jsonString("hello"))
+        let response1 = stubRequest.popResponse(for: httpbin)
+        XCTAssertEqual(response1?.repeatCount, 1)
+        let response2 = stubRequest.popResponse(for: httpbin)
+        XCTAssertEqual(response2?.repeatCount, 0)
     }
 }

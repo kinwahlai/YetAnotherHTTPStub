@@ -198,4 +198,8 @@ class StubResponseTests: XCTestCase {
         XCTAssertEqual(receivedResponse?.statusCode, 200)
         XCTAssertTrue(client.clientDidFinishLoading)
     }
+    
+    func testSetRepeatableToStubResponse() {
+        XCTAssertEqual(StubResponse().setRepeatable(2).repeatCount, 2)
+    }
 }

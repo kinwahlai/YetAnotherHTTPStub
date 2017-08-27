@@ -57,6 +57,15 @@ YetAnotherURLProtocol.stubHTTP { (session) in
 }
 ```
 
+You can also repeat the same response X time by:
+```swift
+YetAnotherURLProtocol.stubHTTP { (session) in
+    session.whenRequest(matcher: http(.get, uri: "/polling"))
+        .thenResponse(repeat: 2, responseBuilder: jsonString("{\"status\": 0}", status: 200))
+        .thenResponse(responseBuilder: jsonString("{\"status\": 1}", status: 200))
+}
+```
+
 ### Matcher
 
 A matcher is a pure function that takes a _URLRequest_ and returns a boolean for checking if the stub request matches the request. And built-in matcher to help simplify the work.

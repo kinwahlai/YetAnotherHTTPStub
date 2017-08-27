@@ -8,43 +8,6 @@
 
 import Foundation
 
-// MARK: - Error
-public struct StubError: Error, Equatable {
-    public var message: String
-    var localizedDescription: String {
-        return message
-    }
-    
-    init(_ message: String) {
-        self.message = message
-    }
-}
-
-public func ==(lhs:StubError, rhs:StubError) -> Bool {
-    return lhs.message == rhs.message
-}
-
-// MARK: - Content
-public enum StubContent: ExpressibleByNilLiteral, Equatable  {
-    public init(nilLiteral: ()) {
-        self = .noContent
-    }
-    
-    case data(Data)
-    case noContent
-}
-
-public func ==(lhs:StubContent, rhs:StubContent) -> Bool {
-    switch(lhs, rhs) {
-    case let (.data(lhsData), .data(rhsData)):
-        return (lhsData == rhsData) && lhsData.count == rhsData.count
-    case (.noContent, .noContent):
-        return true
-    default:
-        return false
-    }
-}
-
 // MARK: - StubResponse
 public enum Response {
     case success(response: HTTPURLResponse, content: StubContent)
@@ -58,6 +21,7 @@ public class StubResponse: NSObject {
     private(set) var queue: DispatchQueue
     fileprivate var postReplyClosure: (() -> Void) = { }
     private(set) var delay: TimeInterval = 0
+    private(set) var repeatCount: Int = 1
     
     var isPartial: Bool {
         return builder == nil
@@ -79,13 +43,19 @@ public class StubResponse: NSObject {
     
     @discardableResult
     func setPostReply(_ postReply: @escaping (() -> Void) = {}) -> StubResponse {
-        self.postReplyClosure = postReply
+        postReplyClosure = postReply
         return self
     }
 
     @discardableResult
     func setResponseDelay(_ delay: TimeInterval) -> StubResponse {
         self.delay = delay
+        return self
+    }
+    
+    @discardableResult
+    func setRepeatable(_ count: Int) -> StubResponse {
+        repeatCount = count
         return self
     }
     
