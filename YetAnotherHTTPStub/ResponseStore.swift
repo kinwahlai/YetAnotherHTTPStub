@@ -65,6 +65,10 @@ public class ResponseStore {
         insert(StubResponse(queue: queue), to: .append)
     }
     
+    func addResponse(with parameter: StubResponse.Parameter) {
+        addResponse(withDelay: parameter.delay, repeat: parameter.repeatCount, postReplyNotify: parameter.postReplyClosure, responseBuilder: parameter.builder)
+    }
+    
     func addResponse(withDelay delay: TimeInterval, repeat count: Int, postReplyNotify: @escaping (()->Void),responseBuilder: @escaping Builder) {
         guard let lastResponse = responses.last else {
             insert(StubResponse()

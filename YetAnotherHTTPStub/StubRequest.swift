@@ -22,7 +22,12 @@ public class StubRequest: NSObject {
     
     @discardableResult
     public func thenResponse(withDelay delay: TimeInterval = 0, repeat count: Int = 1, responseBuilder: @escaping Builder) -> Self {
-        responseStore.addResponse(withDelay: delay, repeat: count, postReplyNotify: {}, responseBuilder: responseBuilder)
+        let param: StubResponse.Parameter = StubResponse.Parameter()
+                                            .setResponseDelay(delay)
+                                            .setRepeatable(count)
+                                            .setPostReply({})
+                                            .setBuilder(builder: responseBuilder)
+        addResponse(param)
         return self
     }
 
@@ -30,8 +35,12 @@ public class StubRequest: NSObject {
     public func thenResponse(configurator: ParameterConfiguration ) -> Self {
         let param: StubResponse.Parameter = StubResponse.Parameter()
         configurator(param)
-        responseStore.addResponse(withDelay: param.delay, repeat: param.repeatCount, postReplyNotify: param.postReplyClosure, responseBuilder: param.builder)
+        addResponse(param)
         return self
+    }
+    
+    private func addResponse(_ parameter: StubResponse.Parameter) {
+        responseStore.addResponse(with: parameter)
     }
     
     @discardableResult
