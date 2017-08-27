@@ -1,11 +1,7 @@
 language: objective-c
 xcode_project: YetAnotherHTTPStub.xcodeproj
 xcode_scheme: YetAnotherHTTPStub
-
-matrix:
-  include:
-    - osx_image: xcode8.3
-    - osx_image: xcode9
+osx_image: xcode8.3
 
 cache:
   directories:
