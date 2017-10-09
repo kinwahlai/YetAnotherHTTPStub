@@ -15,7 +15,7 @@ public struct StubError: Error, Equatable {
         return message
     }
     
-    init(_ message: String) {
+    public init(_ message: String) {
         self.message = message
     }
 }
