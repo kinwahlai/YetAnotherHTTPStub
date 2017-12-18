@@ -157,12 +157,6 @@ YetAnotherURLProtocol.stubHTTP { (session) in
     <tr>
         <td colspan="2"><a href="https://www.paypal.me/KinWahLai/10">Donate via Paypal.me</a></td>
     </tr>
-    <tr>
-        <td>
-            <img src="./kinwahlai-bitcoin.png"/>
-        </td>
-        <td><a href="bitcoin:1PdU216MXW7QTvj1pB4PBD4ztD4vh88bnJ?amount=0.005">1PdU216MXW7QTvj1pB4PBD4ztD4vh88bnJ</a></td>
-    </tr>
 </table>
 
 ## License
