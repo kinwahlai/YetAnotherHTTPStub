@@ -13,7 +13,7 @@ let swizzleDefaultSessionConfiguration: Void = {
     
     let yetAnotherHTTPStubDefaultSessionConfiguration = class_getClassMethod(URLSessionConfiguration.self, #selector(URLSessionConfiguration.yetAnotherHTTPStubDefaultSessionConfiguration))
     
-    method_exchangeImplementations(defaultSessionConfiguration, yetAnotherHTTPStubDefaultSessionConfiguration)
+    method_exchangeImplementations(defaultSessionConfiguration!, yetAnotherHTTPStubDefaultSessionConfiguration!)
 }()
 
 let swizzleEphemeralSessionConfiguration: Void = {
@@ -21,7 +21,7 @@ let swizzleEphemeralSessionConfiguration: Void = {
     
     let yetAnotherHTTPStubEphemeralSessionConfiguration = class_getClassMethod(URLSessionConfiguration.self, #selector(URLSessionConfiguration.yetAnotherHTTPStubEphemeralSessionConfiguration))
     
-    method_exchangeImplementations(ephemeralSessionConfiguration, yetAnotherHTTPStubEphemeralSessionConfiguration)
+    method_exchangeImplementations(ephemeralSessionConfiguration!, yetAnotherHTTPStubEphemeralSessionConfiguration!)
 }()
 
 extension URLSessionConfiguration {
@@ -30,7 +30,7 @@ extension URLSessionConfiguration {
         _ = swizzleEphemeralSessionConfiguration
     }
     
-    class func yetAnotherHTTPStubDefaultSessionConfiguration() -> URLSessionConfiguration {
+    @objc class func yetAnotherHTTPStubDefaultSessionConfiguration() -> URLSessionConfiguration {
         let configuration = yetAnotherHTTPStubDefaultSessionConfiguration()
         var protocolClasses: [AnyClass] = Array(configuration.protocolClasses!)
         protocolClasses.insert(YetAnotherURLProtocol.self, at: 0)
@@ -38,7 +38,7 @@ extension URLSessionConfiguration {
         return configuration
     }
     
-    class func yetAnotherHTTPStubEphemeralSessionConfiguration() -> URLSessionConfiguration {
+    @objc class func yetAnotherHTTPStubEphemeralSessionConfiguration() -> URLSessionConfiguration {
         let configuration = yetAnotherHTTPStubEphemeralSessionConfiguration()
         var protocolClasses: [AnyClass] = Array(configuration.protocolClasses!)
         protocolClasses.insert(YetAnotherURLProtocol.self, at: 0)

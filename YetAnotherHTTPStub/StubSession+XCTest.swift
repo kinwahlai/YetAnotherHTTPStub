@@ -11,12 +11,12 @@ import XCTest
 
 extension StubSession: XCTestObservation {
     public func addToTestObserver() {
-        XCTestObservationCenter.shared().addTestObserver(self)
+        XCTestObservationCenter.shared.addTestObserver(self)
     }
     
     public func testCaseDidFinish(_ testCase: XCTestCase) {
         if self.isProtocolRegistered {
-            XCTestObservationCenter.shared().removeTestObserver(self)
+            XCTestObservationCenter.shared.removeTestObserver(self)
             self.testCaseDidFinishBlock()
             StubSessionManager.removeSharedSession()
         }
