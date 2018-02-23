@@ -1,7 +1,7 @@
 language: objective-c
 xcode_project: YetAnotherHTTPStub.xcodeproj
 xcode_scheme: YetAnotherHTTPStub
-osx_image: xcode9 
+osx_image: xcode9.2
 
 cache:
   directories:
