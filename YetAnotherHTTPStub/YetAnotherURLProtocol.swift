@@ -47,7 +47,5 @@ extension YetAnotherURLProtocol {
         stubResponse.reply(via: self)
     }
     
-    public override func stopLoading() {
-        print("stopLoading")
-    }
+    public override func stopLoading() { }
 }
