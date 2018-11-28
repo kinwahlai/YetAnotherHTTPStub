@@ -22,6 +22,10 @@
 		66B503E11F1B3A1C00EFCA73 /* GET.json in Resources */ = {isa = PBXBuildFile; fileRef = 66B503E01F1B3A1C00EFCA73 /* GET.json */; };
 		66C64F2A1F13340100ED8B96 /* MatchersTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66C64F291F13340100ED8B96 /* MatchersTests.swift */; };
 		66C64F2C1F13349600ED8B96 /* Matchers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66C64F2B1F13349600ED8B96 /* Matchers.swift */; };
+		66D30CA821AF0BE600EFA790 /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66D30CA621AF0BE600EFA790 /* Alamofire.framework */; };
+		66D30CAB21AF0C0200EFA790 /* Alamofire.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 66D30CA621AF0BE600EFA790 /* Alamofire.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		66D30CAC21AF0C0900EFA790 /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66D30CA621AF0BE600EFA790 /* Alamofire.framework */; };
+		66D30CAE21AF0C3700EFA790 /* Cartfile.private in Resources */ = {isa = PBXBuildFile; fileRef = 66D30CAD21AF0C3700EFA790 /* Cartfile.private */; };
 		66D34D9C1F108F520013E89F /* YetAnotherHTTPStub.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66D34D921F108F520013E89F /* YetAnotherHTTPStub.framework */; };
 		66D34DA11F108F520013E89F /* YetAnotherURLProtocolTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66D34DA01F108F520013E89F /* YetAnotherURLProtocolTests.swift */; };
 		66D34DA31F108F520013E89F /* YetAnotherHTTPStub.h in Headers */ = {isa = PBXBuildFile; fileRef = 66D34D951F108F520013E89F /* YetAnotherHTTPStub.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -33,8 +37,6 @@
 		66D34DBC1F1187CD0013E89F /* StubResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66D34DBB1F1187CD0013E89F /* StubResponse.swift */; };
 		66D34DC01F11B25C0013E89F /* StubSessionManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66D34DBF1F11B25C0013E89F /* StubSessionManagerTests.swift */; };
 		66D34DC21F11B3090013E89F /* StubSessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66D34DC11F11B3090013E89F /* StubSessionManager.swift */; };
-		66D810171F5284BE00F8A9CB /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66D810151F52849900F8A9CB /* Alamofire.framework */; };
-		66D810181F5284BE00F8A9CB /* Alamofire.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 66D810151F52849900F8A9CB /* Alamofire.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		66E3A11C1F1AA81700309668 /* StubResponseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66E3A11B1F1AA81700309668 /* StubResponseTests.swift */; };
 		66EE9A6C1F1ACE01003264D4 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66EE9A6B1F1ACE01003264D4 /* AppDelegate.swift */; };
 		66EE9A6E1F1ACE01003264D4 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66EE9A6D1F1ACE01003264D4 /* ViewController.swift */; };
@@ -77,7 +79,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				66D810181F5284BE00F8A9CB /* Alamofire.framework in Embed Frameworks */,
+				66D30CAB21AF0C0200EFA790 /* Alamofire.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -109,6 +111,8 @@
 		66B503E01F1B3A1C00EFCA73 /* GET.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = GET.json; sourceTree = "<group>"; };
 		66C64F291F13340100ED8B96 /* MatchersTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MatchersTests.swift; sourceTree = "<group>"; };
 		66C64F2B1F13349600ED8B96 /* Matchers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Matchers.swift; sourceTree = "<group>"; };
+		66D30CA621AF0BE600EFA790 /* Alamofire.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Alamofire.framework; path = Carthage/Build/iOS/Alamofire.framework; sourceTree = "<group>"; };
+		66D30CAD21AF0C3700EFA790 /* Cartfile.private */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Cartfile.private; sourceTree = "<group>"; };
 		66D34D921F108F520013E89F /* YetAnotherHTTPStub.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = YetAnotherHTTPStub.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		66D34D951F108F520013E89F /* YetAnotherHTTPStub.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = YetAnotherHTTPStub.h; sourceTree = "<group>"; };
 		66D34D961F108F520013E89F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -123,7 +127,6 @@
 		66D34DBB1F1187CD0013E89F /* StubResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StubResponse.swift; sourceTree = "<group>"; };
 		66D34DBF1F11B25C0013E89F /* StubSessionManagerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StubSessionManagerTests.swift; sourceTree = "<group>"; };
 		66D34DC11F11B3090013E89F /* StubSessionManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StubSessionManager.swift; sourceTree = "<group>"; };
-		66D810151F52849900F8A9CB /* Alamofire.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Alamofire.framework; path = Example/Frameworks/Alamofire.framework; sourceTree = "<group>"; };
 		66E3A11B1F1AA81700309668 /* StubResponseTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StubResponseTests.swift; sourceTree = "<group>"; };
 		66EE9A691F1ACE01003264D4 /* Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		66EE9A6B1F1ACE01003264D4 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -160,7 +163,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				66D810171F5284BE00F8A9CB /* Alamofire.framework in Frameworks */,
+				66D30CAC21AF0C0900EFA790 /* Alamofire.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -169,6 +172,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				66B503DD1F1AE13600EFCA73 /* YetAnotherHTTPStub.framework in Frameworks */,
+				66D30CA821AF0BE600EFA790 /* Alamofire.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -178,7 +182,7 @@
 		662613251F12B32200F6007D /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				66D810151F52849900F8A9CB /* Alamofire.framework */,
+				66D30CA621AF0BE600EFA790 /* Alamofire.framework */,
 				669351CF1F141B2C00576163 /* XCTest.framework */,
 			);
 			name = Frameworks;
@@ -187,6 +191,7 @@
 		66D34D881F108F520013E89F = {
 			isa = PBXGroup;
 			children = (
+				66D30CAD21AF0C3700EFA790 /* Cartfile.private */,
 				66D34D941F108F520013E89F /* YetAnotherHTTPStub */,
 				66D34D9F1F108F520013E89F /* YetAnotherHTTPStubTests */,
 				66EE9A6A1F1ACE01003264D4 /* Example */,
@@ -434,6 +439,7 @@
 				66EE9A761F1ACE01003264D4 /* LaunchScreen.storyboard in Resources */,
 				66EE9A731F1ACE01003264D4 /* Assets.xcassets in Resources */,
 				66EE9A711F1ACE01003264D4 /* Main.storyboard in Resources */,
+				66D30CAE21AF0C3700EFA790 /* Cartfile.private in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -727,6 +733,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Example/Frameworks",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
 				INFOPLIST_FILE = Example/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -746,6 +753,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Example/Frameworks",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
 				INFOPLIST_FILE = Example/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -765,6 +773,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Example/Frameworks",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
 				INFOPLIST_FILE = ExampleTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -786,6 +795,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Example/Frameworks",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
 				INFOPLIST_FILE = ExampleTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
