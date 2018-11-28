@@ -1,15 +1,19 @@
 language: objective-c
 xcode_project: YetAnotherHTTPStub.xcodeproj
 xcode_scheme: YetAnotherHTTPStub
-osx_image: xcode9.2
+osx_image: xcode10.1
 
 cache:
   directories:
     - build
+    - Carthage
 
 env:
   - XCODE_SCHEME=YetAnotherHTTPStub
   - XCODE_SCHEME=Example
+
+before_script:
+  - carthage update --platform iOS --cache-builds --no-use-binaries
 
 script: 
   - xcodebuild -list -project YetAnotherHTTPStub.xcodeproj
