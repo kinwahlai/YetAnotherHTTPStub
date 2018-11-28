@@ -18,6 +18,8 @@ class MatchersTests: XCTestCase {
     var urlWithBracketsRequest: URLRequest!
     var urlWithPlusRequest: URLRequest!
     var forInvalidQueryTestRequest: URLRequest!
+    var urlWithFileExtRequest: URLRequest!
+    
     override func setUp() {
         super.setUp()
         urlrequest = URLRequest(url: URL(string: "https://www.httpbin.org/")!)
@@ -32,6 +34,8 @@ class MatchersTests: XCTestCase {
         urlWithPlusRequest = URLRequest(url: URL(string: "https://www.httpbin.org/get?query+test=1")!)
         urlWithPlusRequest.httpMethod = "GET"
         forInvalidQueryTestRequest = URLRequest(url: URL(string: "https://www.httpbin.org/get?show_env=1&page=a")!)
+        urlWithFileExtRequest = URLRequest(url: URL(string: "https://www.httpbin.org/get.json?show_env=1&page=12")!)
+        urlWithFileExtRequest.httpMethod = "GET"
     }
     
     override func tearDown() {
@@ -107,5 +111,9 @@ class MatchersTests: XCTestCase {
     }
     func testMethodWithPlusSign() {
         XCTAssertTrue(http(.get, uri: "/get?query+test=1")(urlWithPlusRequest))
+    }
+    
+    func testMultipleDigitWildcardMatches() {
+        XCTAssertTrue(uri("/get.json?show_env=\\d{1,}&page=\\d{1,}")(urlWithFileExtRequest))
     }
 }

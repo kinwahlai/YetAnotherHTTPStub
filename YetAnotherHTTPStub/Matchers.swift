@@ -26,6 +26,8 @@ public func uri(_ uri:String) -> (_ urlrequest: URLRequest) -> Bool {
         }
         //restore wildcard backslashes that were encoded
         encodedUri = encodedUri.replacingOccurrences(of: "%5C", with: "\\")
+        encodedUri = encodedUri.replacingOccurrences(of: "%7B", with: "{")
+        encodedUri = encodedUri.replacingOccurrences(of: "%7D", with: "}")
 
         //escape regex characters
         encodedUri = encodedUri.replacingOccurrences(of: "?", with: "\\?")
