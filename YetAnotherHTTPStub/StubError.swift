@@ -9,17 +9,43 @@
 import Foundation
 
 // MARK: - Error
-public struct StubError: Error, Equatable {
-    public var message: String
-    var localizedDescription: String {
-        return message
+public enum StubError: Error, Equatable {
+    case other(String)
+    case exhaustedResponse(URLRequest)
+    case partialResponse(URLRequest)
+    
+    public var localizedDescription: String {
+        switch self {
+        case .other(let message):
+            return message
+        case .exhaustedResponse(let request):
+            return "There isn't any(more) response for this request \(request)"
+        case .partialResponse(let request):
+            return "Cannot process partial response for this request \(request)"
+        }
     }
     
-    public init(_ message: String) {
-        self.message = message
+    public var toNSError: NSError {
+        switch self {
+        case .other:
+            return NSError(domain: "YetAnotherHTTPStub.StubError", code: -969, userInfo: ["message": self.localizedDescription])
+        case .exhaustedResponse:
+            return NSError(domain: "YetAnotherHTTPStub.StubError", code: -979, userInfo: ["message": self.localizedDescription])
+        case .partialResponse:
+            return NSError(domain: "YetAnotherHTTPStub.StubError", code: -959, userInfo: ["message": self.localizedDescription])
+        }
     }
 }
 
 public func ==(lhs:StubError, rhs:StubError) -> Bool {
-    return lhs.message == rhs.message
+    switch(lhs, rhs) {
+    case let (.other(lhsMessage), .other(rhsMessage)):
+        return lhsMessage == rhsMessage
+    case let (.exhaustedResponse(lhsURL), .exhaustedResponse(rhsURL)):
+        return lhsURL == rhsURL
+    case let (.partialResponse(lhsURL), .partialResponse(rhsURL)):
+        return lhsURL == rhsURL
+    default:
+        return false
+    }
 }

@@ -31,7 +31,7 @@ class ResponseStoreTests: XCTestCase {
         let stubResponse = store.popResponse(for: httpbin)
         switch stubResponse.builder!(httpbin) {
         case .failure(let error):
-            XCTAssertEqual(error.message, "There isn't any(more) response for this request https://www.httpbin.org/")
+            XCTAssertEqual(error.localizedDescription, "There isn't any(more) response for this request https://www.httpbin.org/")
         case .success(_, _):
             XCTFail()
         }
@@ -43,7 +43,7 @@ class ResponseStoreTests: XCTestCase {
         let stubResponse = store.popResponse(for: httpbin)
         switch stubResponse.builder!(httpbin) {
         case .failure(let error):
-            XCTAssertEqual(error.message, "Cannot process partial response for this request https://www.httpbin.org/")
+            XCTAssertEqual(error.localizedDescription, "Cannot process partial response for this request https://www.httpbin.org/")
         case .success(_, _):
             XCTFail()
         }
@@ -102,7 +102,7 @@ class ResponseStoreTests: XCTestCase {
         let failure = store.popResponse(for: httpbin)
         switch failure.builder!(httpbin) {
         case .failure(let error):
-            XCTAssertEqual(error.message, "There isn't any(more) response for this request https://www.httpbin.org/")
+            XCTAssertEqual(error.localizedDescription, "There isn't any(more) response for this request https://www.httpbin.org/")
         case .success(_, _):
             XCTFail()
         }

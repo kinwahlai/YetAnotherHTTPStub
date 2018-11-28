@@ -14,20 +14,6 @@ public class ResponseStore {
         case replace(Int)
     }
     
-    enum ResponseError {
-        case exhaustedResponse(URLRequest)
-        case partialResponse(URLRequest)
-        
-        func errorMessage() -> String {
-            switch self {
-            case .exhaustedResponse(let request):
-                return "There isn't any(more) response for this request \(request)"
-            case .partialResponse(let request):
-                return "Cannot process partial response for this request \(request)"
-            }
-        }
-    }
-    
     fileprivate let nonPartialResponseChecker: (StubResponse) -> Bool = { response -> Bool in return !response.isPartial }
     
     private(set) var responses: [StubResponse]
@@ -45,19 +31,19 @@ public class ResponseStore {
     }
     
     func popResponse(for request: URLRequest) -> StubResponse {
-        guard !responses.isEmpty else { return createFailureResponse(forType: .exhaustedResponse(request)) }
+        guard !responses.isEmpty else { return createFailureResponse(withError: StubError.exhaustedResponse(request)) }
         if let response = responses.first(where: nonPartialResponseChecker) {
             if response.deductRepeatCount() <= 0 {
                 responses.removeFirst()
             }
             return response
         }else {
-            return createFailureResponse(forType: .partialResponse(request))
+            return createFailureResponse(withError: StubError.partialResponse(request))
         }
     }
 
-    func createFailureResponse(forType type: ResponseError) -> StubResponse {
-        let param = StubResponse.Parameter().setBuilder(builder: failure(StubError(type.errorMessage())))
+    func createFailureResponse(withError error: StubError) -> StubResponse {
+        let param = StubResponse.Parameter().setBuilder(builder: failure(error))
         let response = StubResponse().setup(with: param)
         return response
     }

@@ -150,7 +150,7 @@ class StubResponseTests: XCTestCase {
     
     func testFailureResponse() {
         let fakeProtocol = FakeURLProtocol(request: request, cachedResponse: nil, client: client)
-        let responseBuilder: Builder = failure(StubError("There isn't any(more) response for this request \(request)"))
+        let responseBuilder: Builder = failure(StubError.exhaustedResponse(request))
         let expect = expectation(description: "get")
         let param = StubResponse.Parameter()
                     .setBuilder(builder: responseBuilder)

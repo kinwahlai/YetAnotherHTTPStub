@@ -64,7 +64,7 @@ public class StubResponse: NSObject {
                 }
                 client?.urlProtocolDidFinishLoading(urlProtocol)
             case .failure(let error):
-                client?.urlProtocol(urlProtocol, didFailWithError: error)
+                client?.urlProtocol(urlProtocol, didFailWithError: error.toNSError)
             }
             self.postReplyClosure()
         }

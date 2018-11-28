@@ -150,16 +150,18 @@ class ExampleTests: XCTestCase {
         let expect2 = expectation(description: "2")
         
         let response2: (DataResponse<Any>) -> Void = { (response) in
-            if case .failure(let error) = response.result {
-                XCTAssertEqual((error as! StubError).message, "Cannot process partial response for this request https://httpbin.org/partialResponse")
+            if case .failure(let error as NSError) = response.result {
+                XCTAssertEqual(error.code, -959)
+                XCTAssertEqual(error.userInfo["message"] as? String, "Cannot process partial response for this request https://httpbin.org/partialResponse")
             } else {
                 XCTFail()
             }
             expect2.fulfill()
         }
         let response1: (DataResponse<Any>) -> Void = { (response) in
-            if case .failure(let error) = response.result {
-                XCTAssertEqual((error as! StubError).message, "There isn't any(more) response for this request https://httpbin.org/noResponse")
+            if case .failure(let error as NSError) = response.result {
+                XCTAssertEqual(error.code, -979)
+                XCTAssertEqual(error.userInfo["message"] as? String, "There isn't any(more) response for this request https://httpbin.org/noResponse")
             } else {
                 XCTFail()
             }

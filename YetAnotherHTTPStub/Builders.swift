@@ -26,7 +26,7 @@ public func jsonString(_ jsonString: String, status:Int = 200, headers:[String:S
         if let data = jsonString.data(using: String.Encoding.utf8) {
             return jsonData(data, status: status, headers: headers)(urlrequest)
         } else {
-            return .failure(StubError("Failed to convert jsonString to Data"))
+            return .failure(StubError.other("Failed to convert jsonString to Data"))
         }
     }
 }
@@ -37,7 +37,7 @@ public func json(_ body: Any, status:Int = 200, headers:[String:String]? = nil) 
             let data = try JSONSerialization.data(withJSONObject: body, options: JSONSerialization.WritingOptions())
             return jsonData(data, status: status, headers: headers)(urlrequest)
         } catch {
-            return .failure(StubError("JSONSerialization failed"))
+            return .failure(StubError.other("JSONSerialization failed"))
         }
     }
 }
@@ -58,7 +58,7 @@ public func fileContent(_ url: URL, status:Int = 200, headers:[String:String]? =
             let data = try Data(contentsOf: url)
             return http(status, headers: headers, content: .data(data))(urlrequest)
         } catch {
-            return .failure(StubError("Reading file content failed"))
+            return .failure(StubError.other("Reading file content failed"))
         }
     }
 }

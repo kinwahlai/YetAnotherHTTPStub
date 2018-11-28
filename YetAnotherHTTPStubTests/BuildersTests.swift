@@ -42,7 +42,7 @@ class BuildersTests: XCTestCase {
     }
     
     func testBuildFailureResponse() {
-        let yaError = StubError("Any Error")
+        let yaError = StubError.other("Any Error")
         let response = failure(yaError)(urlrequest)
         if case .failure(let error) = response {
             XCTAssertEqual(error, yaError)
