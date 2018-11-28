@@ -2,7 +2,6 @@
 
 [![Build Status](https://travis-ci.org/kinwahlai/YetAnotherHTTPStub.svg?branch=master)](https://travis-ci.org/kinwahlai/YetAnotherHTTPStub)
 [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
-[![https://img.shields.io/badge/bitcoin-donate-blue.svg](https://img.shields.io/badge/bitcoin-donate-blue.svg)](#donation)
 [![https://img.shields.io/badge/paypal.me-donate-blue.svg](https://img.shields.io/badge/paypal.me-donate-blue.svg)](#donation)
 
 In many case, we need to mock the network response when we writing unit test that has network request, like calling an API.
@@ -155,7 +154,7 @@ YetAnotherURLProtocol.stubHTTP { (session) in
         <td colspan="2"> If you like my work on <b>YetAnotherHTTPStub</b> or to support open source, consider a small donation to my bitcoin address or paypal.me: </td>
     </tr>
     <tr>
-        <td colspan="2"><a href="https://www.paypal.me/KinWahLai/10">Donate via Paypal.me</a></td>
+        <td colspan="2"><a href="https://www.paypal.me/KinWahLai/5">Donate via Paypal.me</a></td>
     </tr>
 </table>
 
