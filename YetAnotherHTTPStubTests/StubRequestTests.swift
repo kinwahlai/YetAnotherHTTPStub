@@ -46,8 +46,12 @@ class StubRequestTests: XCTestCase {
     func testRequestHasMultipleStubResponse() {
         let stubRequest = StubRequest(trueMatcher)
         stubRequest
-            .thenResponse(responseBuilder: http(200, headers: [:], content: .noContent))
-            .thenResponse(responseBuilder: http(404, headers: [:], content: .noContent))
+            .thenResponse(configurator: { param in
+                param.setBuilder(builder: http(200, headers: [:], content: .noContent))
+            })
+            .thenResponse(configurator: { param in
+                param.setBuilder(builder: http(404, headers: [:], content: .noContent))
+            })
         
         XCTAssertEqual(stubRequest.responseStore.responseCount, 2)
     }
@@ -78,7 +82,9 @@ class StubRequestTests: XCTestCase {
     
     func testReturnFailureResponseIfResponseStackBecomeEmpty() {
         let stubRequest = StubRequest(trueMatcher)
-        stubRequest.thenResponse(responseBuilder: jsonString("hello1"))
+        stubRequest.thenResponse(configurator: { param in
+            param.setBuilder(builder: jsonString("hello1"))
+        })
         _ = stubRequest.popResponse(for: httpbin)
         let stubResponse = stubRequest.popResponse(for: httpbin)
         switch stubResponse!.builder!(httpbin) {
@@ -91,14 +97,18 @@ class StubRequestTests: XCTestCase {
 
     func testNoResponsesIfRequestNotMatch() {
         let stubRequest = StubRequest(falseMatcher)
-        stubRequest.thenResponse(responseBuilder: http(200, headers: [:], content: .noContent))
+        stubRequest.thenResponse(configurator: { param in
+            param.setBuilder(builder: http(200, headers: [:], content: .noContent))
+        })
         let response = stubRequest.popResponse(for: httpbin)
         XCTAssertNil(response)
     }
     
     func testFirstResponsesIfRequestMatching() {
         let stubRequest = StubRequest(trueMatcher)
-        stubRequest.thenResponse(responseBuilder: jsonString("hello"))
+        stubRequest.thenResponse(configurator: { param in
+            param.setBuilder(builder: jsonString("hello"))
+        })
         let stubResponse = stubRequest.popResponse(for: httpbin)
         switch stubResponse!.builder!(httpbin) {
         case .failure(_):
@@ -111,8 +121,12 @@ class StubRequestTests: XCTestCase {
     func testUseFirstResponseQueueUntilSwitchToOtherQueue() {
         let stubRequest = StubRequest(trueMatcher)
         stubRequest
-            .thenResponse(responseBuilder: jsonString("hello"))
-            .thenResponse(responseBuilder: jsonString("world"))
+            .thenResponse(configurator: { param in
+                param.setBuilder(builder: jsonString("hello"))
+            })
+            .thenResponse(configurator: { param in
+                param.setBuilder(builder: jsonString("world"))
+            })
         let response1 = stubRequest.popResponse(for: httpbin)
         let response2 = stubRequest.popResponse(for: httpbin)
         XCTAssertNotNil(response1)
@@ -137,7 +151,9 @@ class StubRequestTests: XCTestCase {
         let stubRequest = StubRequest(trueMatcher)
         stubRequest
             .responseOn(queue: customQueue)
-            .thenResponse(responseBuilder: jsonString("hello"))
+            .thenResponse(configurator: { param in
+                param.setBuilder(builder: jsonString("hello"))
+            })
         let stubResponse = stubRequest.popResponse(for: httpbin)
         XCTAssertNotNil(stubResponse)
         switch stubResponse!.builder!(httpbin) {
@@ -152,11 +168,19 @@ class StubRequestTests: XCTestCase {
     func testUseLastQueueUntilItSwitch() {
         let stubRequest = StubRequest(trueMatcher)
         stubRequest
-            .thenResponse(responseBuilder: jsonString("hello"))
-            .thenResponse(responseBuilder: jsonString("world"))
+            .thenResponse(configurator: { param in
+                param.setBuilder(builder: jsonString("hello"))
+            })
+            .thenResponse(configurator: { param in
+                param.setBuilder(builder: jsonString("world"))
+            })
             .responseOn(queue: customQueue)
-            .thenResponse(responseBuilder: jsonString("?"))
-            .thenResponse(responseBuilder: jsonString("!"))
+            .thenResponse(configurator: { param in
+                param.setBuilder(builder: jsonString("?"))
+            })
+            .thenResponse(configurator: { param in
+                param.setBuilder(builder: jsonString("!"))
+            })
         let response1 = stubRequest.popResponse(for: httpbin)
         let response2 = stubRequest.popResponse(for: httpbin)
         let response3 = stubRequest.popResponse(for: httpbin)
@@ -178,7 +202,9 @@ class StubRequestTests: XCTestCase {
     func testDefaultDelayIsZero() {
         let stubRequest = StubRequest(trueMatcher)
         stubRequest
-            .thenResponse(responseBuilder: jsonString("hello"))
+            .thenResponse(configurator: { param in
+                param.setBuilder(builder: jsonString("hello"))
+            })
         let response1 = stubRequest.popResponse(for: httpbin)
         XCTAssertEqual(response1?.delay, 0)
     }
@@ -186,7 +212,10 @@ class StubRequestTests: XCTestCase {
     func testSetDelayForTheResponse() {
         let stubRequest = StubRequest(trueMatcher)
         stubRequest
-            .thenResponse(withDelay: 5, responseBuilder: jsonString("hello"))
+            .thenResponse(configurator: { param in
+                param.setBuilder(builder: jsonString("hello"))
+                    .setResponseDelay(5)
+            })
         let response1 = stubRequest.popResponse(for: httpbin)
         XCTAssertEqual(response1?.delay, 5)
     }
@@ -194,20 +223,10 @@ class StubRequestTests: XCTestCase {
     func testSetRepeatableForTheResponse() {
         let stubRequest = StubRequest(trueMatcher)
         stubRequest
-            .thenResponse(withDelay: 0, repeat: 2, responseBuilder: jsonString("hello"))
-        let response1 = stubRequest.popResponse(for: httpbin)
-        XCTAssertEqual(response1?.repeatCount, 1)
-        let response2 = stubRequest.popResponse(for: httpbin)
-        XCTAssertEqual(response2?.repeatCount, 0)
-    }
-
-    func testUsingParameterForRepeatable() {
-        let stubRequest = StubRequest(trueMatcher)
-        stubRequest
-            .thenResponse(configurator: { (param) in
-                param.setResponseDelay(0)
-                     .setRepeatable(2)
-                     .setBuilder(builder: jsonString("hello"))
+            .thenResponse(configurator: { param in
+                param.setBuilder(builder: jsonString("hello"))
+                    .setResponseDelay(0)
+                    .setRepeatable(2)
             })
         let response1 = stubRequest.popResponse(for: httpbin)
         XCTAssertEqual(response1?.repeatCount, 1)

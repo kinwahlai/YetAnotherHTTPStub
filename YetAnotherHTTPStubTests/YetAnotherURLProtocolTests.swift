@@ -43,7 +43,9 @@ class YetAnotherURLProtocolTests: XCTestCase {
         // NOTE: Create your stub before get your session configuration
         YetAnotherURLProtocol.stubHTTP { session in
             session.whenRequest(matcher: everything)
-                .thenResponse(responseBuilder: http(404))
+                .thenResponse(configurator: { param in
+                    param.setBuilder(builder: http(404))
+                })
         }
         
         let configuration = URLSessionConfiguration.default
@@ -66,8 +68,12 @@ class YetAnotherURLProtocolTests: XCTestCase {
         let expectation = self.expectation(description: "StubTests1")
         YetAnotherURLProtocol.stubHTTP { session in
             session.whenRequest(matcher: everything)
-                .thenResponse(responseBuilder: jsonString("{\"hello\":\"world\"}", status: 200))
-                .thenResponse(responseBuilder: jsonString("{\"errors\": \"something\"", status: 404))
+                .thenResponse(configurator: { param in
+                    param.setBuilder(builder: jsonString("{\"hello\":\"world\"}", status: 200))
+                })
+                .thenResponse(configurator: { param in
+                    param.setBuilder(builder: jsonString("{\"errors\": \"something\"", status: 404))
+                })
         }
         
         let configuration = URLSessionConfiguration.default

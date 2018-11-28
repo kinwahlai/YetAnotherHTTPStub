@@ -21,6 +21,7 @@ public class StubRequest: NSObject {
     }
     
     // to be deprecated in next version
+    @available(*, deprecated, message: "use thenResponse(configurator:) instead")
     @discardableResult
     public func thenResponse(withDelay delay: TimeInterval = 0, repeat count: Int = 1, responseBuilder: @escaping Builder) -> Self {
         let param: StubResponse.Parameter = StubResponse.Parameter()

@@ -193,7 +193,7 @@ class StubResponseTests: XCTestCase {
     }
     
     func testGetResponseAfterDelay() {
-        let delay: TimeInterval = 5
+        let delay: TimeInterval = 2
         let fakeProtocol = FakeURLProtocol(request: request, cachedResponse: nil, client: client)
         let expect = expectation(description: "get")
         let param = StubResponse.Parameter()
