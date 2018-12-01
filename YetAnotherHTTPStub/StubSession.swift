@@ -16,6 +16,8 @@ public class StubSession: NSObject {
     var isProtocolRegistered = false
     var uuid: UUID
     var stubRequests: [StubRequest]
+    var debugEnabled: Bool = false
+    
     public var testCaseDidFinishBlock: (()->()) = {}
     
     public var hasRequest: Bool {

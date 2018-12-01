@@ -9,18 +9,21 @@
 import Foundation
 
 public func everything(_ urlrequest: URLRequest) -> Bool {
+    log("Everything matches '\(urlrequest.debugDescription)'")
     return true
 }
 
 public func nothing(_ urlrequest: URLRequest) -> Bool {
+    log("Nothing matches '\(urlrequest.debugDescription)'")
     return false
 }
 
-public func uri(_ uri:String) -> (_ urlrequest: URLRequest) -> Bool {
+public func uri(_ uri:String, debug: Bool = false) -> (_ urlrequest: URLRequest) -> Bool {
     return { (_ urlrequest: URLRequest) -> Bool in
         guard let urlstring = urlrequest.url?.absoluteString, let _ = urlrequest.url?.path else {
             return false
         }
+        log("Check '\(urlstring)' matches uri '\(uri)'")
         guard var encodedUri = uri.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed) else {
             return false
         }
