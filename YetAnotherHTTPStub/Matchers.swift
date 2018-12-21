@@ -67,7 +67,7 @@ public enum HTTPMethod: String {
 public func http(_ method: HTTPMethod, uri: String) -> (_ urlrequest: URLRequest) -> Bool {
     return { (_ urlrequest: URLRequest) -> Bool in
         guard let requestMethod = urlrequest.httpMethod else { return false }
-        log("Check url method '\(requestMethod)' matches requested method '\(requestMethod.description)'")
+        log("Check url method '\(requestMethod)' matches requested method '\(method.rawValue)'")
         if (requestMethod == method.rawValue && YetAnotherHTTPStub.uri(uri)(urlrequest)) {
             return true
         }
