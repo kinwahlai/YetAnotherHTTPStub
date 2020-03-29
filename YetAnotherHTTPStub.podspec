@@ -16,7 +16,7 @@ Pod::Spec.new do |s|
   #
 
   s.name         = "YetAnotherHTTPStub"
-  s.version      = "1.6.1"
+  s.version      = "1.6.2"
   s.summary      = "YetAnotherHTTPStub to mock the network response for unit test"
 
   s.description  = <<-DESC
@@ -43,6 +43,6 @@ Pod::Spec.new do |s|
   #
   s.framework = "XCTest"
 
-  s.swift_version = "4.2"
+  s.swift_version = "5.0"
 
 end
