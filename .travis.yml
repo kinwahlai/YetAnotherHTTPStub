@@ -1,20 +1,21 @@
-language: objective-c
-xcode_project: YetAnotherHTTPStub.xcodeproj
-xcode_scheme: YetAnotherHTTPStub
-osx_image: xcode11.3
+os:
+  - osx
+language: swift
+osx_image: xcode11.6
+git:
+  depth: 1
 
 cache:
   directories:
-    - build
-    - Carthage
+    - .build
 
+xcode_project: YetAnotherHTTPStub.xcodeproj
+xcode_scheme: YetAnotherHTTPStub
+    
 env:
   - XCODE_SCHEME=YetAnotherHTTPStub
   - XCODE_SCHEME=Example
 
-before_script:
-  - carthage update --platform iOS --cache-builds --no-use-binaries
-
 script: 
-  - xcodebuild -list -project YetAnotherHTTPStub.xcodeproj
-  - set -o pipefail && xcodebuild -project YetAnotherHTTPStub.xcodeproj -scheme $XCODE_SCHEME -sdk iphonesimulator -destination "name=iPhone SE" clean build-for-testing test | xcpretty
+  - xcodebuild -list -project YetAnotherHTTPStub.xcodeproj 
+  - set -o pipefail && xcodebuild -project YetAnotherHTTPStub.xcodeproj -scheme $XCODE_SCHEME -destination "platform=iOS Simulator,OS=latest,name=iPhone 11" clean build-for-testing test | xcpretty
