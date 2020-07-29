@@ -16,8 +16,6 @@ env:
   - XCODE_SCHEME=YetAnotherHTTPStub
   - XCODE_SCHEME=Example
 
-install: swift package update
-
 script: 
   - xcodebuild -list -project YetAnotherHTTPStub.xcodeproj
   - set -o pipefail && xcodebuild -project YetAnotherHTTPStub.xcodeproj -scheme $XCODE_SCHEME -sdk iphonesimulator -destination "name=iPhone SE" clean build-for-testing test | xcpretty
