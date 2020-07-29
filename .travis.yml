@@ -1,19 +1,22 @@
-language: objective-c
-xcode_project: YetAnotherHTTPStub.xcodeproj
-xcode_scheme: YetAnotherHTTPStub
-osx_image: xcode11.3
+os:
+  - osx
+language: swift
+osx_image: xcode11.6
+git:
+  depth: 1
 
 cache:
   directories:
-    - build
-    - Carthage
+    - .build
 
+xcode_project: YetAnotherHTTPStub.xcodeproj
+xcode_scheme: YetAnotherHTTPStub
+    
 env:
   - XCODE_SCHEME=YetAnotherHTTPStub
   - XCODE_SCHEME=Example
 
-before_script:
-  - carthage update --platform iOS --cache-builds --no-use-binaries
+install: swift package update
 
 script: 
   - xcodebuild -list -project YetAnotherHTTPStub.xcodeproj
