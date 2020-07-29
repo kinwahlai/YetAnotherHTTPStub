@@ -18,4 +18,10 @@ env:
 
 script: 
   - xcodebuild -list -project YetAnotherHTTPStub.xcodeproj
-  - set -o pipefail && xcodebuild -project YetAnotherHTTPStub.xcodeproj -scheme $XCODE_SCHEME -sdk iphonesimulator clean build-for-testing test | xcpretty
+  -| 
+  set -o pipefail && 
+  xcodebuild 
+  -project YetAnotherHTTPStub.xcodeproj 
+  -scheme $XCODE_SCHEME 
+  -destination "platform=iOS Simulator,OS=latest,name=iPhone 11" 
+  clean build-for-testing test | xcpretty
