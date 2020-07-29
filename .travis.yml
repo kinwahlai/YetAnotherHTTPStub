@@ -25,3 +25,5 @@ script:
   -scheme $XCODE_SCHEME 
   -destination "platform=iOS Simulator,OS=latest,name=iPhone 11" 
   clean build-for-testing test | xcpretty
+
+  
