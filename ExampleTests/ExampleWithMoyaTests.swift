@@ -1,27 +1,25 @@
 //
-//  ExampleWithAlamofireTests.swift
-//  ExampleWithAlamofireTests
+//  ExampleWithMoyaTests.swift
+//  ExampleTests
 //
-//  Created by Darren Lai on 7/15/17.
-//  Copyright © 2017 KinWahLai. All rights reserved.
+//  Created by Darren Lai on 7/30/20.
+//  Copyright © 2020 KinWahLai. All rights reserved.
 //
 
 import XCTest
 import YetAnotherHTTPStub
 @testable import Example
 
-class ExampleWithAlamofireTests: XCTestCase {
-    
-    override func setUp() {
-        super.setUp()
+class ExampleWithMoyaTests: XCTestCase {
+
+    override func setUpWithError() throws {
     }
-    
-    override func tearDown() {
-        super.tearDown()
+
+    override func tearDownWithError() throws {
     }
-    
-    func testSimpleExample() {
-        let bundle = Bundle(for: ExampleWithAlamofireTests.self)
+
+    func testSimpleExample() throws {
+        let bundle = Bundle(for: ExampleWithMoyaTests.self)
         guard let path = bundle.path(forResource: "GET", ofType: "json"), let data = try? Data(contentsOf: URL(fileURLWithPath: path)) else { XCTFail(); return }
         
         YetAnotherURLProtocol.stubHTTP { (session) in
@@ -30,7 +28,7 @@ class ExampleWithAlamofireTests: XCTestCase {
         }
         
         let expect = expectation(description: "")
-        let service = ServiceUsingAlamofire()
+        let service = ServiceUsingMoya()
         
         service.getRequest { (dict, _) in
             XCTAssertNotNil(dict)
@@ -45,7 +43,7 @@ class ExampleWithAlamofireTests: XCTestCase {
     }
     
     func testMultipleRequestExample() {
-        let bundle = Bundle(for: ExampleWithAlamofireTests.self)
+        let bundle = Bundle(for: ExampleWithMoyaTests.self)
         guard let path = bundle.path(forResource: "GET", ofType: "json"), let data = try? Data(contentsOf: URL(fileURLWithPath: path)) else { XCTFail(); return }
         let expect1 = expectation(description: "1")
         let expect2 = expectation(description: "2")
@@ -58,7 +56,7 @@ class ExampleWithAlamofireTests: XCTestCase {
             .thenResponse(responseBuilder: jsonString("{\"args\":{\"page\": 1,\"show_env\": 1}}", status: 200))
         }
         
-        let service = ServiceUsingAlamofire()
+        let service = ServiceUsingMoya()
         service.getRequest { (dict, _) in
             XCTAssertNotNil(dict)
             let originIp = dict!["origin"] as! String
@@ -86,7 +84,7 @@ class ExampleWithAlamofireTests: XCTestCase {
                 .thenResponse(responseBuilder: jsonString("{\"status\": 0}", status: 200))
                 .thenResponse(responseBuilder: jsonString("{\"status\": 1}", status: 200))
         }
-        let service = ServiceUsingAlamofire()
+        let service = ServiceUsingMoya()
         
         let response3: HttpbinService.ResquestResponse = { (dict, _) in
             let dictInt = dict as! [String: Int]
@@ -108,14 +106,14 @@ class ExampleWithAlamofireTests: XCTestCase {
     
     func testSimpleExampleWithDelay() {
         let delay: TimeInterval = 5
-        let bundle = Bundle(for: ExampleWithAlamofireTests.self)
+        let bundle = Bundle(for: ExampleWithMoyaTests.self)
         guard let path = bundle.path(forResource: "GET", ofType: "json"), let data = try? Data(contentsOf: URL(fileURLWithPath: path)) else { XCTFail(); return }
         
         YetAnotherURLProtocol.stubHTTP { (session) in
             session.whenRequest(matcher: http(.get, uri: "/get"))
                 .thenResponse(withDelay: delay, responseBuilder: jsonData(data, status: 200))
         }
-        let service = ServiceUsingAlamofire()
+        let service = ServiceUsingMoya()
         let expect = expectation(description: "")
         service.getRequest { (dict, error) in
             XCTAssertNotNil(dict)
@@ -126,53 +124,15 @@ class ExampleWithAlamofireTests: XCTestCase {
             XCTAssertNil(error)
         }
     }
-
-    // TODO: fix the test that failed after AF 5 upgrade
-    func xtestRequestFailedIfStubSessionSetupIncomplete() {
-        let customQueue = DispatchQueue(label: "custom.queue")
-        YetAnotherURLProtocol.stubHTTP { (session) in
-            session.whenRequest(matcher: http(.get, uri: "/noResponse"))
-            session.whenRequest(matcher: http(.get, uri: "/partialResponse"))
-                .responseOn(queue: customQueue)
-        }
-        let service1 = ServiceUsingAlamofire()
-        let service2 = ServiceUsingAlamofire()
-        
-        let expect1 = expectation(description: "1")
-        let expect2 = expectation(description: "2")
-        
-        let response2: HttpbinService.ResquestResponse = { (_, error) in
-            if let err = error as NSError? {
-                XCTAssertEqual(err.code, -959)
-                XCTAssertEqual(err.userInfo["message"] as? String, "Cannot process partial response for this request https://httpbin.org/partialResponse")
-            } else {
-                XCTFail()
-            }
-            expect2.fulfill()
-        }
-        let response1: HttpbinService.ResquestResponse = { (_, error) in
-            if let err = error as NSError? {
-                XCTAssertEqual(err.code, -979)
-                XCTAssertEqual(err.userInfo["message"] as? String, "There isn't any(more) response for this request https://httpbin.org/noResponse")
-            } else {
-                XCTFail()
-            }
-            expect1.fulfill()
-        }
-        service1.getRequest(with: "https://httpbin.org/noResponse", response1)
-        service2.getRequest(with: "https://httpbin.org/partialResponse", response2)
-        
-        wait(for: [expect1, expect2], timeout: 5)
-    }
     
     func testExampleUsingFileContentBuilder() {
-        guard let filePath: URL = Bundle(for: ExampleWithAlamofireTests.self).url(forResource: "GET", withExtension: "json") else { XCTFail(); return }
+        guard let filePath: URL = Bundle(for: ExampleWithMoyaTests.self).url(forResource: "GET", withExtension: "json") else { XCTFail(); return }
         
         YetAnotherURLProtocol.stubHTTP { (session) in
             session.whenRequest(matcher: http(.get, uri: "/get"))
                 .thenResponse(responseBuilder: jsonFile(filePath)) // or fileContent
         }
-        let service = ServiceUsingAlamofire()
+        let service = ServiceUsingMoya()
         let expect = expectation(description: "")
         service.getRequest { (dict, error) in
             XCTAssertNil(error)
@@ -196,7 +156,7 @@ class ExampleWithAlamofireTests: XCTestCase {
                 .thenResponse(repeat: 2, responseBuilder: jsonString("{\"status\": 0}", status: 200))
                 .thenResponse(responseBuilder: jsonString("{\"status\": 1}", status: 200))
         }
-        let service = ServiceUsingAlamofire()
+        let service = ServiceUsingMoya()
         
         let response3: HttpbinService.ResquestResponse = { (dict, error) in
             XCTAssertNotNil(dict)
@@ -235,7 +195,7 @@ class ExampleWithAlamofireTests: XCTestCase {
                         }
                 })
         }
-        let service = ServiceUsingAlamofire()
+        let service = ServiceUsingMoya()
         let expect = expectation(description: "")
         service.getRequest { (dict, error) in
             expect.fulfill()
@@ -246,6 +206,4 @@ class ExampleWithAlamofireTests: XCTestCase {
         
         XCTAssertEqual(gotNotify, "post reply notification")
     }
-    
-    // need a few POST example
 }

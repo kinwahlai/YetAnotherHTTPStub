@@ -15,11 +15,11 @@ protocol HttpbinService {
 
 struct ServiceUsingAlamofire: HttpbinService {
     
-    func getRequest(_ response: @escaping ResquestResponse) {
+    func getRequest(_ response: @escaping HttpbinService.ResquestResponse) {
         getRequest(with: "https://httpbin.org/get", response)
     }
     
-    func getRequest(with urlString: String, _ response: @escaping ResquestResponse) {
+    func getRequest(with urlString: String, _ response: @escaping HttpbinService.ResquestResponse) {
         AF.request(urlString).responseJSON { (res) in
             response(res.value as? [String: Any], res.error)
         }
