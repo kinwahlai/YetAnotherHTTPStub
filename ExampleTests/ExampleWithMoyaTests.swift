@@ -206,4 +206,26 @@ class ExampleWithMoyaTests: XCTestCase {
         
         XCTAssertEqual(gotNotify, "post reply notification")
     }
+    
+    func testPostARequest() {
+        guard let filePath: URL = Bundle(for: ExampleWithAlamofireTests.self).url(forResource: "POST", withExtension: "json") else { XCTFail(); return }
+        
+        YetAnotherURLProtocol.stubHTTP { (session) in
+            session.whenRequest(matcher: everything)
+                .thenResponse(responseBuilder: jsonFile(filePath)) // or fileContent
+        }
+        
+        let service = ServiceUsingMoya()
+        let expect = expectation(description: "")
+        service.post(["username": "Darren"]) { (dict, error) in
+            let originIp = dict!["origin"] as! String
+            XCTAssertEqual(originIp, "9.9.9.9")
+            let url = dict!["url"] as! String
+            XCTAssertEqual(url, "https://httpbin.org/post")
+            expect.fulfill()
+        }
+        waitForExpectations(timeout: 5) { (error) in
+            XCTAssertNil(error)
+        }
+    }
 }
