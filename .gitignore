@@ -3,3 +3,4 @@ xcuserdata
 Carthage/Checkouts
 Carthage/Build
 build
+.build

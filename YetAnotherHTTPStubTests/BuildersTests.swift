@@ -100,31 +100,37 @@ class BuildersTests: XCTestCase {
     }
     
     func testBuildResponseWithFileContent() {
-        let filePath: URL = Bundle(for: BuildersTests.self).url(forResource: "GET", withExtension: "json")!
-        let data = try! Data(contentsOf: filePath)
-        let response = fileContent(filePath, status: 200)(urlrequest)
-        XCTAssertNotNil(response)
-        if case .success(let response, let content) = response {
-            XCTAssertEqual(response.statusCode, 200)
-            XCTAssertNil(response.mimeType)
-            XCTAssertEqual(content, StubContent.data(data))
+        if let filePath: URL = Bundle(for: BuildersTests.self).url(forResource: "GET", withExtension: "json") {
+            let data = try! Data(contentsOf: filePath)
+            let response = fileContent(filePath, status: 200)(urlrequest)
+            XCTAssertNotNil(response)
+            if case .success(let response, let content) = response {
+                XCTAssertEqual(response.statusCode, 200)
+                XCTAssertNil(response.mimeType)
+                XCTAssertEqual(content, StubContent.data(data))
+            } else {
+                XCTFail()
+            }
         } else {
-            XCTFail()
+            _ = XCTSkip()
         }
     }
     
     func testBuildResponseWithJSONFile() {
-        let filePath: URL = Bundle(for: BuildersTests.self).url(forResource: "GET", withExtension: "json")!
-        let data = try! Data(contentsOf: filePath)
-        let response = jsonFile(filePath)(urlrequest)
-        XCTAssertNotNil(response)
-        if case .success(let response, let content) = response {
-            XCTAssertEqual(response.statusCode, 200)
-            XCTAssertEqual(response.mimeType, "application/json")
-            XCTAssertEqual(response.textEncodingName, "utf-8")
-            XCTAssertEqual(content, StubContent.data(data))
+        if let filePath: URL = Bundle(for: BuildersTests.self).url(forResource: "GET", withExtension: "json") {
+            let data = try! Data(contentsOf: filePath)
+            let response = jsonFile(filePath)(urlrequest)
+            XCTAssertNotNil(response)
+            if case .success(let response, let content) = response {
+                XCTAssertEqual(response.statusCode, 200)
+                XCTAssertEqual(response.mimeType, "application/json")
+                XCTAssertEqual(response.textEncodingName, "utf-8")
+                XCTAssertEqual(content, StubContent.data(data))
+            } else {
+                XCTFail()
+            }
         } else {
-            XCTFail()
+            _ = XCTSkip()
         }
     }
 }
