@@ -1,0 +1,24 @@
+{
+  "args": {},
+  "data": "{\"token\":\"462F4521-E57F-4405-BD5B-E24DFE35AF0C\",\"data\":{\"username\":\"Darren\"}}",
+  "files": {},
+  "form": {},
+  "headers": {
+    "Accept": "application/json",
+    "Accept-Encoding": "br;q=1.0, gzip;q=0.9, deflate;q=0.8",
+    "Accept-Language": "en;q=1.0",
+    "Content-Length": "77",
+    "Content-Type": "application/json",
+    "Host": "httpbin.org",
+    "User-Agent": "Example/1.0 (com.kinwahlai.Example; build:1; iOS 13.6.0) Alamofire/5.2.2",
+    "X-Amzn-Trace-Id": "Root=1-5f2347f8-2c6d1e00f5ee60c05c132600"
+  },
+  "json": {
+    "data": {
+      "username": "Darren"
+    },
+    "token": "462F4521-E57F-4405-BD5B-E24DFE35AF0C"
+  },
+  "origin": "9.9.9.9",
+  "url": "https://httpbin.org/post"
+}

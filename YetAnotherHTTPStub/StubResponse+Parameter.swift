@@ -5,6 +5,7 @@
 //  Created by Darren Lai on 8/27/17.
 //  Copyright © 2017 KinWahLai. All rights reserved.
 //
+import Foundation
 
 extension StubResponse {
     public class Parameter {
