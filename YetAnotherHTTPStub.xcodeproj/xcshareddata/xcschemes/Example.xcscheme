@@ -47,6 +47,16 @@
                ReferencedContainer = "container:YetAnotherHTTPStub.xcodeproj">
             </BuildableReference>
          </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "660B631124D386EB0097DF74"
+               BuildableName = "ExampleUITests.xctest"
+               BlueprintName = "ExampleUITests"
+               ReferencedContainer = "container:YetAnotherHTTPStub.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
    </TestAction>
    <LaunchAction
